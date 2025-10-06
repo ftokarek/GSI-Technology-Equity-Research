@@ -106,13 +106,17 @@ def extract_financial_table_v2(df: pd.DataFrame,
     if df.empty or df.shape[0] < 2:
         return pd.DataFrame()
     
-    # Find header row (contains year or date info)
+    # Find header row (contains year WITH context, not just standalone year)
     header_row = 0
     for idx, row in df.iterrows():
         row_str = ' '.join([str(val).lower() for val in row if pd.notna(val)])
-        # Look for year patterns or dates
-        if any(pattern in row_str for pattern in ['march', '2020', '2021', '2022', 
-                                                   '2023', '2024', '2025', 'year ended']):
+        # Look for year patterns WITH context (not just "2020" alone)
+        # Must have "march" or "year ended" or multiple years
+        has_context = any(pattern in row_str for pattern in ['march', 'year ended', 'fiscal'])
+        has_multiple_years = sum(1 for y in ['2020', '2021', '2022', '2023', '2024', '2025'] 
+                                if y in row_str) >= 2
+        
+        if has_context or has_multiple_years:
             header_row = idx
             break
     
