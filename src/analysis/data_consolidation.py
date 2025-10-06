@@ -149,7 +149,7 @@ class DataConsolidator:
             
             for standard_name, possible_names in item_mappings.items():
                 value = None
-                all_values = []
+                all_values = []  # Will store (column_index, value, sheet_priority) tuples
                 
                 # Try to find the item using various name matches
                 for name_pattern in possible_names:
@@ -162,9 +162,43 @@ class DataConsolidator:
                     ]
                     
                     if not matches.empty:
-                        # Collect ALL numeric values from this row
+                        # Collect ALL numeric values from this row WITH column order AND sheet priority
                         for _, row in matches.iterrows():
-                            for col in matches.columns:
+                            # Get column list early (needed for checks)
+                            col_list = list(matches.columns)
+                            
+                            # SKIP rows with actual quarterly data
+                            # Check if this ROW has values in columns that are quarterly identifiers
+                            quarterly_cols_with_data = 0
+                            quarterly_col_names = ['june_30', 'september_30', 'december_31', 'march_31']
+                            for col_name in quarterly_col_names:
+                                if col_name in row.index and pd.notna(row[col_name]) and row[col_name] != '':
+                                    quarterly_cols_with_data += 1
+                            
+                            has_quarterly = quarterly_cols_with_data >= 2  # If 2+ quarterly values present, it's quarterly data
+                            
+                            # SKIP sheets with "consideration", "contingent", "valuation" (often quarterly)
+                            sheet_name = str(row.get('sheet_name', '')).lower()
+                            skip_sheets = ['consideration', 'contingent', 'valuation', 
+                                          'management', 'selected financial data']
+                            is_skip_sheet = any(ss in sheet_name for ss in skip_sheets)
+                            
+                            if has_quarterly or is_skip_sheet:
+                                continue  # Skip this row entirely
+                            
+                            # Determine sheet priority (lower = better)
+                            # Prefer: financial statements > operations > other sheets
+                            if 'financial statement' in sheet_name:
+                                sheet_priority = 0
+                            elif 'operations' in sheet_name or 'consolidated' in sheet_name:
+                                sheet_priority = 1
+                            elif 'balance' in sheet_name:
+                                sheet_priority = 2
+                            else:
+                                sheet_priority = 5
+                            
+                            # Iterate through columns to collect values
+                            for col_idx, col in enumerate(col_list):
                                 if col not in ['year', 'line_item', 'filename', 'company', 
                                              'form_type', 'filing_date', 'source_file', 
                                              'statement_type', 'sheet_name']:
@@ -174,23 +208,31 @@ class DataConsolidator:
                                             num_val = float(val)
                                             # Filter out obviously wrong values
                                             if abs(num_val) > 0.01:  # Ignore very small values
-                                                all_values.append(abs(num_val))
+                                                # Store with sheet priority, then column index
+                                                all_values.append((sheet_priority, col_idx, abs(num_val)))
                                         except (ValueError, TypeError):
                                             continue
                         
                         if all_values:
                             break
                 
-                # Choose the LARGEST value (actual dollars, not percentages)
+                # Choose the FIRST large value from the BEST sheet (likely current year)
+                # Financial statements typically show: Current Year, Prior Year, 2 Years Ago
+                # We want the FIRST column (current year), not the largest
                 # Percentages are typically 0-100, actual values are in thousands (>100)
                 if all_values:
-                    # Prefer values > 100 (likely actual dollar amounts in thousands)
-                    large_values = [v for v in all_values if v > 100]
+                    # Sort by: 1) sheet priority (lower = better), 2) column index
+                    all_values.sort(key=lambda x: (x[0], x[1]))
+                    
+                    # Get values > 100 (likely actual dollar amounts in thousands)
+                    large_values = [(priority, idx, v) for priority, idx, v in all_values if v > 100]
+                    
                     if large_values:
-                        value = max(large_values)
+                        # Take FIRST large value from best priority sheet
+                        value = large_values[0][2]
                     else:
-                        # If no large values, take the max of what we have
-                        value = max(all_values)
+                        # If no large values, take the first of what we have
+                        value = all_values[0][2]
                 
                 row_data[standard_name] = value
             
