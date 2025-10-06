@@ -177,25 +177,32 @@ class DataConsolidator:
                             
                             has_quarterly = quarterly_cols_with_data >= 2  # If 2+ quarterly values present, it's quarterly data
                             
-                            # SKIP sheets with "consideration", "contingent", "valuation" (often quarterly)
-                            sheet_name = str(row.get('sheet_name', '')).lower()
-                            skip_sheets = ['consideration', 'contingent', 'valuation', 
-                                          'management', 'selected financial data']
-                            is_skip_sheet = any(ss in sheet_name for ss in skip_sheets)
+                            # ONLY skip if has quarterly data
+                            # Don't blanket exclude sheets - let the data speak for itself
+                            if has_quarterly:
+                                continue  # Skip rows with actual quarterly data
                             
-                            if has_quarterly or is_skip_sheet:
-                                continue  # Skip this row entirely
+                            # Get sheet name for prioritization
+                            sheet_name = str(row.get('sheet_name', '')).lower()
                             
                             # Determine sheet priority (lower = better)
-                            # Prefer: financial statements > operations > other sheets
+                            # Prefer: financial statements > consolidated > operations > valuation > consideration > management
                             if 'financial statement' in sheet_name:
                                 sheet_priority = 0
-                            elif 'operations' in sheet_name or 'consolidated' in sheet_name:
+                            elif 'consolidated' in sheet_name and ('operation' in sheet_name or 'balance' in sheet_name):
                                 sheet_priority = 1
-                            elif 'balance' in sheet_name:
+                            elif 'operations' in sheet_name or 'income' in sheet_name:
                                 sheet_priority = 2
+                            elif 'balance' in sheet_name:
+                                sheet_priority = 3
+                            elif 'valuation' in sheet_name or 'contingent' in sheet_name:
+                                sheet_priority = 4  # Better than consideration
+                            elif 'consideration' in sheet_name:
+                                sheet_priority = 8  # Often quarterly data
+                            elif 'management' in sheet_name or 'selected financial' in sheet_name:
+                                sheet_priority = 9  # Very low priority (likely percentages)
                             else:
-                                sheet_priority = 5
+                                sheet_priority = 5  # Default middle priority
                             
                             # Iterate through columns to collect values
                             for col_idx, col in enumerate(col_list):
