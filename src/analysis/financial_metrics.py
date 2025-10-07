@@ -266,7 +266,7 @@ class FinancialMetricsCalculator:
                             stats[f'{col}_3y_std'] = values.std()
             
             last_10y = recent_df.tail(10)
-            if len(last_10y) >= 5:  # At least 5 years
+            if len(last_10y) >= 5:  
                 for col in last_10y.columns:
                     if col != 'year' and col in last_10y.columns:
                         values = last_10y[col].dropna()

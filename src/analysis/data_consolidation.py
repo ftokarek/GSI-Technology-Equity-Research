@@ -117,7 +117,7 @@ class DataConsolidator:
             
             for standard_name, possible_names in item_mappings.items():
                 value = None
-                all_values = []  # Will store (column_index, value, sheet_priority) tuples
+                all_values = []  
                 
                 for name_pattern in possible_names:
                     matches = year_data[
@@ -138,10 +138,10 @@ class DataConsolidator:
                                 if col_name in row.index and pd.notna(row[col_name]) and row[col_name] != '':
                                     quarterly_cols_with_data += 1
                             
-                            has_quarterly = quarterly_cols_with_data >= 2  # If 2+ quarterly values present, it's quarterly data
+                            has_quarterly = quarterly_cols_with_data >= 2 
                             
                             if has_quarterly:
-                                continue  # Skip rows with actual quarterly data
+                                continue  
                             
                             sheet_name = str(row.get('sheet_name', '')).lower()
                             
@@ -154,13 +154,13 @@ class DataConsolidator:
                             elif 'balance' in sheet_name:
                                 sheet_priority = 3
                             elif 'valuation' in sheet_name or 'contingent' in sheet_name:
-                                sheet_priority = 4  # Better than consideration
+                                sheet_priority = 4  
                             elif 'consideration' in sheet_name:
-                                sheet_priority = 8  # Often quarterly data
+                                sheet_priority = 8  
                             elif 'management' in sheet_name or 'selected financial' in sheet_name:
-                                sheet_priority = 9  # Very low priority (likely percentages)
+                                sheet_priority = 9  
                             else:
-                                sheet_priority = 5  # Default middle priority
+                                sheet_priority = 5 
                             
                             for col_idx, col in enumerate(col_list):
                                 if col not in ['year', 'line_item', 'filename', 'company', 
@@ -170,7 +170,7 @@ class DataConsolidator:
                                     if pd.notna(val) and val != '':
                                         try:
                                             num_val = float(val)
-                                            if abs(num_val) > 0.01:  # Ignore very small values
+                                            if abs(num_val) > 0.01: 
                                                 all_values.append((sheet_priority, col_idx, abs(num_val)))
                                         except (ValueError, TypeError):
                                             continue
@@ -234,7 +234,7 @@ class DataConsolidator:
         
         output_file = self.output_dir / "master_income_statement.csv"
         master_income.to_csv(output_file, index=False)
-        print(f"  ✓ Master income statement saved: {len(master_income)} years")
+        print(f"    Master income statement saved: {len(master_income)} years")
         print(f"    Years covered: {master_income['year'].min()} - {master_income['year'].max()}")
         
         return master_income

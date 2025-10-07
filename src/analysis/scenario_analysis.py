@@ -48,8 +48,8 @@ class ScenarioAnalyzer:
         projections = []
         
         revenue = current_revenue
-        gross_margin = 65.0  # Strong margins maintained
-        operating_margin_improvement = 5.0  # 5% improvement per year
+        gross_margin = 65.0  
+        operating_margin_improvement = 5.0  
         operating_margin = patterns['current_operating_margin']
         
         for year in range(1, projection_years + 1):
@@ -59,7 +59,7 @@ class ScenarioAnalyzer:
             
             gross_profit = revenue * (gross_margin / 100)
             operating_income = revenue * (operating_margin / 100)
-            net_income = operating_income * 0.75  # 25% tax approximation
+            net_income = operating_income * 0.75  
             
             projections.append({
                 'year': 2025 + year,
@@ -73,7 +73,7 @@ class ScenarioAnalyzer:
         
         scenario = {
             'name': 'Bull Case - Successful Turnaround',
-            'probability': 25,  # 25% probability
+            'probability': 25, 
             'assumptions': {
                 'revenue_growth': '10% per year',
                 'gross_margin': f'{gross_margin}%',
@@ -88,7 +88,7 @@ class ScenarioAnalyzer:
             'projections': projections,
             'five_year_revenue': projections[-1]['revenue'],
             'five_year_cagr': ((projections[-1]['revenue'] / current_revenue) ** (1/projection_years) - 1) * 100,
-            'target_valuation_multiple': 3.0  # EV/Sales multiple
+            'target_valuation_multiple': 3.0
         }
         
         scenario['implied_enterprise_value'] = scenario['five_year_revenue'] * scenario['target_valuation_multiple']
@@ -102,15 +102,15 @@ class ScenarioAnalyzer:
         projections = []
         
         revenue = current_revenue
-        gross_margin = 60.0  # Maintaining current margins
+        gross_margin = 60.0  
         operating_margin = patterns['current_operating_margin']
-        operating_margin_improvement = 2.0  # Slow improvement
+        operating_margin_improvement = 2.0  
         
         for year in range(1, projection_years + 1):
             if year <= 2:
-                revenue = revenue * 1.00  # Flat
+                revenue = revenue * 1.00  
             else:
-                revenue = revenue * 1.03  # 3% growth
+                revenue = revenue * 1.03  
             
             operating_margin = min(operating_margin + operating_margin_improvement, 5.0)
             
@@ -130,7 +130,7 @@ class ScenarioAnalyzer:
         
         scenario = {
             'name': 'Base Case - Stabilization',
-            'probability': 50,  # 50% probability
+            'probability': 50,  
             'assumptions': {
                 'revenue_growth': 'Flat for 2 years, then 3% growth',
                 'gross_margin': f'{gross_margin}%',
@@ -145,7 +145,7 @@ class ScenarioAnalyzer:
             'projections': projections,
             'five_year_revenue': projections[-1]['revenue'],
             'five_year_cagr': ((projections[-1]['revenue'] / current_revenue) ** (1/projection_years) - 1) * 100,
-            'target_valuation_multiple': 1.5  # EV/Sales multiple
+            'target_valuation_multiple': 1.5 
         }
         
         scenario['implied_enterprise_value'] = scenario['five_year_revenue'] * scenario['target_valuation_multiple']
@@ -159,7 +159,7 @@ class ScenarioAnalyzer:
         projections = []
         
         revenue = current_revenue
-        gross_margin = 55.0  # Margin pressure
+        gross_margin = 55.0 
         operating_margin = patterns['current_operating_margin']
         
         for year in range(1, projection_years + 1):
@@ -183,7 +183,7 @@ class ScenarioAnalyzer:
         
         scenario = {
             'name': 'Bear Case - Continued Decline',
-            'probability': 25,  # 25% probability
+            'probability': 25,  
             'assumptions': {
                 'revenue_growth': '-10% per year',
                 'gross_margin': f'{gross_margin}%',
@@ -198,7 +198,7 @@ class ScenarioAnalyzer:
             'projections': projections,
             'five_year_revenue': projections[-1]['revenue'],
             'five_year_cagr': ((projections[-1]['revenue'] / current_revenue) ** (1/projection_years) - 1) * 100,
-            'target_valuation_multiple': 0.5  # EV/Sales multiple (distressed)
+            'target_valuation_multiple': 0.5  
         }
         
         scenario['implied_enterprise_value'] = scenario['five_year_revenue'] * scenario['target_valuation_multiple']
