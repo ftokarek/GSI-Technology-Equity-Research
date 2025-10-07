@@ -92,39 +92,43 @@ class LaTeXReportGenerator:
         rec = self.final_rec.iloc[0]
         
         latex = "\\section{Executive Summary}\n\n"
-        latex += "\\vspace{0.5cm}\n\n"
         
         latex += "\\begin{center}\n"
+        latex += "\\fcolorbox{darkblue}{lightgray}{\n"
+        latex += "\\begin{minipage}{0.9\\textwidth}\n"
+        latex += "\\vspace{0.3cm}\n"
+        latex += "\\centering\n"
         latex += "\\begin{tabular}{ll}\n"
-        latex += "\\toprule\n"
         latex += "\\textbf{Company} & GSI Technology Inc. (NASDAQ: GSIT) \\\\\n"
         latex += f"\\textbf{{Analyst}} & Franciszek Tokarek \\\\\n"
-        latex += f"\\textbf{{Analysis Date}} & {self.executive_summary.iloc[0]['analysis_date']} \\\\\n"
-        latex += f"\\textbf{{Recommendation}} & \\textcolor{{red}}{{\\textbf{{{rec['recommendation']}}}}} \\\\\n"
-        latex += f"\\textbf{{Confidence}} & {rec['confidence']} \\\\\n"
-        latex += f"\\textbf{{Score}} & {rec['score']}/10 \\\\\n"
-        latex += "\\bottomrule\n"
+        latex += f"\\textbf{{Report Date}} & {self.executive_summary.iloc[0]['analysis_date']} \\\\\n"
+        latex += "\\midrule\n"
+        latex += f"\\textbf{{Recommendation}} & \\textcolor{{darkred}}{{\\Large\\textbf{{{rec['recommendation']}}}}} \\\\\n"
+        latex += f"\\textbf{{Confidence Level}} & {rec['confidence']} \\\\\n"
+        latex += f"\\textbf{{Investment Score}} & {rec['score']}/10 \\\\\n"
         latex += "\\end{tabular}\n"
+        latex += "\\vspace{0.3cm}\n"
+        latex += "\\end{minipage}\n"
+        latex += "}\n"
         latex += "\\end{center}\n\n"
-        latex += "\\vspace{0.5cm}\n\n"
+        latex += "\\vspace{0.8cm}\n\n"
         
         latex += "\\subsection{Key Findings}\n\n"
         latex += "\\begin{itemize}\n"
-        latex += "\\itemsep0.3em\n"
-        latex += f"\\item Revenue declining at {self.growth_metrics.tail(1)['revenue_cagr_3y'].iloc[0]:.1f}\\% 3-year CAGR\n"
-        latex += f"\\item Gross margins remain strong at {self.profitability.tail(3)['gross_margin'].mean():.1f}\\%\n"
-        latex += f"\\item Operating margins negative at {self.profitability.tail(3)['operating_margin'].mean():.1f}\\%\n"
-        latex += f"\\item Cash position critical at \\${self.balance_metrics.iloc[-1]['cash']/1000:.1f}M with 12-month runway\n"
-        latex += f"\\item Stock-based compensation high at 14.8\\% of revenue\n"
+        latex += "\\setlength{\\itemsep}{0.4em}\n"
+        latex += f"\\item \\textbf{{Revenue Trend:}} Declining at {self.growth_metrics.tail(1)['revenue_cagr_3y'].iloc[0]:.1f}\\% 3-year CAGR (from \\$33.4M in 2023 to \\$20.5M in 2025)\n"
+        latex += f"\\item \\textbf{{Gross Margins:}} Strong at {self.profitability.tail(3)['gross_margin'].mean():.1f}\\% average, demonstrating pricing power\n"
+        latex += f"\\item \\textbf{{Operating Margins:}} Deeply negative at {self.profitability.tail(3)['operating_margin'].mean():.1f}\\%, indicating operational challenges\n"
+        latex += f"\\item \\textbf{{Cash Position:}} Critical level of \\${self.balance_metrics.iloc[-1]['cash']/1000:.1f}M providing approximately 12-month runway\n"
+        latex += f"\\item \\textbf{{Liquidity:}} Current ratio of {self.balance_metrics.iloc[-1]['current_ratio']:.2f} indicates adequate short-term liquidity\n"
         latex += "\\end{itemize}\n\n"
-        latex += "\\vspace{0.3cm}\n\n"
+        latex += "\\vspace{0.5cm}\n\n"
         
         latex += "\\subsection{Investment Suitability}\n\n"
-        latex += f"\\noindent {rec['suitable_for']}\n\n"
-        
-        latex += "\\vspace{0.3cm}\n\n"
-        latex += "\\subsection{Risk Tolerance Required}\n\n"
-        latex += f"\\noindent \\textbf{{Risk Level:}} {rec['risk_tolerance']}\n\n"
+        latex += "\\begin{quote}\n"
+        latex += f"\\textit{{{rec['suitable_for']}}} This investment requires \\textbf{{{rec['risk_tolerance']}}} risk tolerance "
+        latex += "and is not suitable for conservative or income-focused investors.\n"
+        latex += "\\end{quote}\n\n"
         
         return latex
     
@@ -211,46 +215,68 @@ class LaTeXReportGenerator:
         
         latex = "\\section{Investment Recommendation}\n\n"
         
-        latex += f"\\subsection{{Primary Recommendation: \\textcolor{{red}}{{{rec['recommendation']}}}}}\n\n"
+        latex += "\\begin{center}\n"
+        latex += "\\fcolorbox{darkred}{white}{\n"
+        latex += "\\begin{minipage}{0.85\\textwidth}\n"
+        latex += "\\vspace{0.3cm}\n"
+        latex += "\\centering\n"
+        latex += f"{{\\Huge\\textcolor{{darkred}}{{\\textbf{{{rec['recommendation']}}}}}}}\\\\[0.3cm]\n"
+        latex += f"{{\\large Confidence: {rec['confidence']} | Score: {rec['score']}/10}}\n"
+        latex += "\\vspace{0.3cm}\n"
+        latex += "\\end{minipage}\n"
+        latex += "}\n"
+        latex += "\\end{center}\n\n"
+        latex += "\\vspace{0.5cm}\n\n"
+        
         latex += f"Based on comprehensive analysis of financial performance, market position, and future scenarios, "
         latex += f"the recommendation is to \\textbf{{{rec['recommendation']}}} GSI Technology stock.\n\n"
-        latex += "\\vspace{0.3cm}\n\n"
+        latex += "\\vspace{0.5cm}\n\n"
         
         latex += "\\subsection{Recommendation by Investment Horizon}\n\n"
-        latex += "\\begin{itemize}\n"
-        latex += "\\itemsep0.3em\n"
-        latex += f"\\item \\textbf{{Short-term (1-2 years):}} {rec['short_term_rec']} - Cash runway concerns require immediate attention\n"
-        latex += f"\\item \\textbf{{Medium-term (3-5 years):}} {rec['medium_term_rec']} - Wait for revenue stabilization signals\n"
-        latex += f"\\item \\textbf{{Long-term (5+ years):}} {rec['long_term_rec']} - Strategic value may attract acquirer\n"
-        latex += "\\end{itemize}\n\n"
-        latex += "\\vspace{0.3cm}\n\n"
+        latex += "\\begin{center}\n"
+        latex += "\\begin{tabular}{p{3cm}p{10cm}}\n"
+        latex += "\\toprule\n"
+        latex += "\\textbf{Horizon} & \\textbf{Recommendation} \\\\\n"
+        latex += "\\midrule\n"
+        latex += f"Short-term\\newline(1-2 years) & \\textbf{{{rec['short_term_rec']}}} -- Cash runway concerns require immediate monitoring. Liquidity position remains adequate but declining. \\\\\n"
+        latex += f"Medium-term\\newline(3-5 years) & \\textbf{{{rec['medium_term_rec']}}} -- Revenue stabilization signals needed before considering entry. Operational turnaround remains uncertain. \\\\\n"
+        latex += f"Long-term\\newline(5+ years) & \\textbf{{{rec['long_term_rec']}}} -- Strategic value and IP portfolio may attract acquisition interest from larger players. \\\\\n"
+        latex += "\\bottomrule\n"
+        latex += "\\end{tabular}\n"
+        latex += "\\end{center}\n\n"
+        latex += "\\vspace{0.5cm}\n\n"
         
-        latex += "\\subsection{Key Risk Factors}\n\n"
+        latex += "\\subsection{Risk Assessment}\n\n"
+        latex += "\\subsubsection{Primary Risk Factors}\n\n"
         latex += "\\begin{enumerate}\n"
-        latex += "\\itemsep0.3em\n"
-        latex += "\\item \\textbf{Revenue Decline:} 53\\% decline over 5 years with -15\\% 3-year CAGR\n"
-        latex += "\\item \\textbf{Operating Losses:} Persistent negative operating margins averaging -73\\%\n"
-        latex += f"\\item \\textbf{{Cash Position:}} Critical cash level of \\${self.balance_metrics.iloc[-1]['cash']/1000:.1f}M providing only 12-month runway\n"
-        latex += "\\item \\textbf{Market Share:} Declining competitive position in niche SRAM market (<1\\% share)\n"
-        latex += "\\item \\textbf{Dilution:} High stock-based compensation at 14.8\\% of revenue\n"
+        latex += "\\setlength{\\itemsep}{0.4em}\n"
+        latex += "\\item \\textbf{Revenue Decline:} 53\\% decline over 5 years with -15\\% 3-year CAGR, indicating persistent market share losses\n"
+        latex += "\\item \\textbf{Operating Losses:} Negative operating margins averaging -73\\%, with no clear path to profitability\n"
+        latex += f"\\item \\textbf{{Cash Burn:}} Critical cash level of \\${self.balance_metrics.iloc[-1]['cash']/1000:.1f}M provides only 12-month runway at current burn rate\n"
+        latex += "\\item \\textbf{Market Position:} Less than 1\\% market share in niche SRAM market, vulnerable to larger competitors\n"
+        latex += "\\item \\textbf{Dilution Risk:} Stock-based compensation at 14.8\\% of revenue creates shareholder dilution concerns\n"
         latex += "\\end{enumerate}\n\n"
-        latex += "\\vspace{0.3cm}\n\n"
+        latex += "\\vspace{0.5cm}\n\n"
         
-        latex += "\\subsection{Potential Opportunities}\n\n"
+        latex += "\\subsubsection{Potential Upside Opportunities}\n\n"
         latex += "\\begin{enumerate}\n"
-        latex += "\\itemsep0.3em\n"
-        latex += "\\item \\textbf{Strong Gross Margins:} 64\\% average demonstrates product differentiation\n"
-        latex += "\\item \\textbf{Acquisition Target:} Low valuation and IP portfolio may attract strategic buyers\n"
-        latex += "\\item \\textbf{APU Technology:} Potential applications in AI/ML in-memory computing\n"
-        latex += "\\item \\textbf{Operational Turnaround:} Cost cutting and revenue stabilization possible\n"
-        latex += "\\item \\textbf{Valuation:} Trading below book value with 1,536\\% upside in bull scenario\n"
+        latex += "\\setlength{\\itemsep}{0.4em}\n"
+        latex += f"\\item \\textbf{{Product Differentiation:}} {self.profitability.tail(3)['gross_margin'].mean():.1f}\\% average gross margin demonstrates strong pricing power\n"
+        latex += "\\item \\textbf{Acquisition Value:} Low enterprise valuation combined with valuable IP portfolio makes company attractive acquisition target\n"
+        latex += "\\item \\textbf{Technology Platform:} APU (Associative Processing Unit) technology has potential applications in AI/ML space\n"
+        latex += "\\item \\textbf{Turnaround Potential:} Operational improvements could restore profitability if revenue stabilizes\n"
+        latex += "\\item \\textbf{Valuation Upside:} Currently trading significantly below historical valuations with 1,536\\% upside in bull scenario\n"
         latex += "\\end{enumerate}\n\n"
-        latex += "\\vspace{0.3cm}\n\n"
+        latex += "\\vspace{0.5cm}\n\n"
         
-        latex += "\\subsection{Conclusion}\n\n"
-        latex += f"\\noindent {rec['suitable_for']} The current financial trajectory presents "
-        latex += "significant challenges, but the company's technology assets and potential for strategic "
-        latex += "acquisition provide speculative upside for investors with very high risk tolerance.\n\n"
+        latex += "\\subsection{Final Conclusion}\n\n"
+        latex += "\\begin{quote}\n"
+        latex += f"\\textit{{This investment is suitable only for {rec['suitable_for'].lower()}.}} "
+        latex += "The persistent revenue decline, negative operating margins, and critical cash position present "
+        latex += "substantial downside risks. However, the company's IP portfolio, potential for acquisition, "
+        latex += "and strong gross margins provide speculative upside for investors willing to accept high risk. "
+        latex += f"Given the current trajectory, a \\textbf{{{rec['recommendation']}}} recommendation is warranted.\n"
+        latex += "\\end{quote}\n\n"
         
         return latex
     
@@ -286,7 +312,7 @@ class LaTeXReportGenerator:
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{geometry}
-\geometry{margin=1in}
+\geometry{left=1.2in,right=1.2in,top=1in,bottom=1in}
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{hyperref}
@@ -296,20 +322,51 @@ class LaTeXReportGenerator:
 \usepackage{xcolor}
 \usepackage{titlesec}
 \usepackage{fancyhdr}
+\usepackage{parskip}
 \onehalfspacing
 
 \definecolor{darkblue}{RGB}{0,51,102}
-\titleformat{\section}{\Large\bfseries\color{darkblue}}{\thesection}{1em}{}
-\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+\definecolor{mediumblue}{RGB}{0,102,204}
+\definecolor{lightgray}{RGB}{240,240,240}
+\definecolor{darkred}{RGB}{139,0,0}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{darkblue}}
+  {\thesection}{1em}{}[\titlerule]
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{mediumblue}}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries}
+  {\thesubsubsection}{1em}{}
 
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{GSI Technology - Equity Research}
-\fancyhead[R]{Franciszek Tokarek}
-\fancyfoot[C]{\thepage}
+\fancyhead[L]{\small\textit{GSI Technology - Equity Research}}
+\fancyhead[R]{\small\textit{Franciszek Tokarek}}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
 
-\title{\Huge\bfseries GSI Technology Inc. \\ \Large Comprehensive Equity Research Report}
-\author{\Large Franciszek Tokarek \\ \normalsize Independent Equity Analysis}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=darkblue,
+    filecolor=darkblue,
+    urlcolor=darkblue,
+    citecolor=darkblue
+}
+
+\title{
+    \vspace{2cm}
+    {\Huge\bfseries GSI Technology Inc.}\\[0.5cm]
+    {\Large\textcolor{mediumblue}{Comprehensive Equity Research Report}}\\[2cm]
+}
+\author{
+    {\Large\textbf{Franciszek Tokarek}}\\[0.3cm]
+    {\normalsize Independent Equity Analysis}
+}
 \date{\today}
 """
     

@@ -3,7 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{geometry}
-\geometry{margin=1in}
+\geometry{left=1.2in,right=1.2in,top=1in,bottom=1in}
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{hyperref}
@@ -13,20 +13,51 @@
 \usepackage{xcolor}
 \usepackage{titlesec}
 \usepackage{fancyhdr}
+\usepackage{parskip}
 \onehalfspacing
 
 \definecolor{darkblue}{RGB}{0,51,102}
-\titleformat{\section}{\Large\bfseries\color{darkblue}}{\thesection}{1em}{}
-\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+\definecolor{mediumblue}{RGB}{0,102,204}
+\definecolor{lightgray}{RGB}{240,240,240}
+\definecolor{darkred}{RGB}{139,0,0}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{darkblue}}
+  {\thesection}{1em}{}[\titlerule]
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{mediumblue}}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries}
+  {\thesubsubsection}{1em}{}
 
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{GSI Technology - Equity Research}
-\fancyhead[R]{Franciszek Tokarek}
-\fancyfoot[C]{\thepage}
+\fancyhead[L]{\small\textit{GSI Technology - Equity Research}}
+\fancyhead[R]{\small\textit{Franciszek Tokarek}}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
 
-\title{\Huge\bfseries GSI Technology Inc. \\ \Large Comprehensive Equity Research Report}
-\author{\Large Franciszek Tokarek \\ \normalsize Independent Equity Analysis}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=darkblue,
+    filecolor=darkblue,
+    urlcolor=darkblue,
+    citecolor=darkblue
+}
+
+\title{
+    \vspace{2cm}
+    {\Huge\bfseries GSI Technology Inc.}\\[0.5cm]
+    {\Large\textcolor{mediumblue}{Comprehensive Equity Research Report}}\\[2cm]
+}
+\author{
+    {\Large\textbf{Franciszek Tokarek}}\\[0.3cm]
+    {\normalsize Independent Equity Analysis}
+}
 \date{\today}
 
 \begin{document}
@@ -50,45 +81,45 @@ investment recommendation.
 
 \section{Executive Summary}
 
-\vspace{0.5cm}
-
 \begin{center}
+\fcolorbox{darkblue}{lightgray}{
+\begin{minipage}{0.9\textwidth}
+\vspace{0.3cm}
+\centering
 \begin{tabular}{ll}
-\toprule
 \textbf{Company} & GSI Technology Inc. (NASDAQ: GSIT) \\
 \textbf{Analyst} & Franciszek Tokarek \\
-\textbf{Analysis Date} & 2025-10-07 \\
-\textbf{Recommendation} & \textcolor{red}{\textbf{SELL}} \\
-\textbf{Confidence} & Medium \\
-\textbf{Score} & -2/10 \\
-\bottomrule
+\textbf{Report Date} & 2025-10-07 \\
+\midrule
+\textbf{Recommendation} & \textcolor{darkred}{\Large\textbf{SELL}} \\
+\textbf{Confidence Level} & Medium \\
+\textbf{Investment Score} & -2/10 \\
 \end{tabular}
+\vspace{0.3cm}
+\end{minipage}
+}
 \end{center}
 
-\vspace{0.5cm}
+\vspace{0.8cm}
 
 \subsection{Key Findings}
 
 \begin{itemize}
-\itemsep0.3em
-\item Revenue declining at -15.0\% 3-year CAGR
-\item Gross margins remain strong at 63.9\%
-\item Operating margins negative at -73.2\%
-\item Cash position critical at \$1.0M with 12-month runway
-\item Stock-based compensation high at 14.8\% of revenue
+\setlength{\itemsep}{0.4em}
+\item \textbf{Revenue Trend:} Declining at -15.0\% 3-year CAGR (from \$33.4M in 2023 to \$20.5M in 2025)
+\item \textbf{Gross Margins:} Strong at 63.9\% average, demonstrating pricing power
+\item \textbf{Operating Margins:} Deeply negative at -73.2\%, indicating operational challenges
+\item \textbf{Cash Position:} Critical level of \$1.0M providing approximately 12-month runway
+\item \textbf{Liquidity:} Current ratio of 3.32 indicates adequate short-term liquidity
 \end{itemize}
 
-\vspace{0.3cm}
+\vspace{0.5cm}
 
 \subsection{Investment Suitability}
 
-\noindent High-risk/high-reward opportunity investors
-
-\vspace{0.3cm}
-
-\subsection{Risk Tolerance Required}
-
-\noindent \textbf{Risk Level:} High
+\begin{quote}
+\textit{High-risk/high-reward opportunity investors} This investment requires \textbf{High} risk tolerance and is not suitable for conservative or income-focused investors.
+\end{quote}
 
 
 \newpage
@@ -251,52 +282,73 @@ Bear Case - Continued Decline & 25 & 12,115.7 & -10.0\% & 6,057.8 \\
 
 \section{Investment Recommendation}
 
-\subsection{Primary Recommendation: \textcolor{red}{SELL}}
+\begin{center}
+\fcolorbox{darkred}{white}{
+\begin{minipage}{0.85\textwidth}
+\vspace{0.3cm}
+\centering
+{\Huge\textcolor{darkred}{\textbf{SELL}}}\\[0.3cm]
+{\large Confidence: Medium | Score: -2/10}
+\vspace{0.3cm}
+\end{minipage}
+}
+\end{center}
+
+\vspace{0.5cm}
 
 Based on comprehensive analysis of financial performance, market position, and future scenarios, the recommendation is to \textbf{SELL} GSI Technology stock.
 
-\vspace{0.3cm}
+\vspace{0.5cm}
 
 \subsection{Recommendation by Investment Horizon}
 
-\begin{itemize}
-\itemsep0.3em
-\item \textbf{Short-term (1-2 years):} SPECULATIVE - Cash runway concerns require immediate attention
-\item \textbf{Medium-term (3-5 years):} HOLD - Wait for revenue stabilization signals
-\item \textbf{Long-term (5+ years):} SPECULATIVE BUY - Strategic value may attract acquirer
-\end{itemize}
+\begin{center}
+\begin{tabular}{p{3cm}p{10cm}}
+\toprule
+\textbf{Horizon} & \textbf{Recommendation} \\
+\midrule
+Short-term\newline(1-2 years) & \textbf{SPECULATIVE} -- Cash runway concerns require immediate monitoring. Liquidity position remains adequate but declining. \\
+Medium-term\newline(3-5 years) & \textbf{HOLD} -- Revenue stabilization signals needed before considering entry. Operational turnaround remains uncertain. \\
+Long-term\newline(5+ years) & \textbf{SPECULATIVE BUY} -- Strategic value and IP portfolio may attract acquisition interest from larger players. \\
+\bottomrule
+\end{tabular}
+\end{center}
 
-\vspace{0.3cm}
+\vspace{0.5cm}
 
-\subsection{Key Risk Factors}
+\subsection{Risk Assessment}
 
-\begin{enumerate}
-\itemsep0.3em
-\item \textbf{Revenue Decline:} 53\% decline over 5 years with -15\% 3-year CAGR
-\item \textbf{Operating Losses:} Persistent negative operating margins averaging -73\%
-\item \textbf{Cash Position:} Critical cash level of \$1.0M providing only 12-month runway
-\item \textbf{Market Share:} Declining competitive position in niche SRAM market (<1\% share)
-\item \textbf{Dilution:} High stock-based compensation at 14.8\% of revenue
-\end{enumerate}
-
-\vspace{0.3cm}
-
-\subsection{Potential Opportunities}
+\subsubsection{Primary Risk Factors}
 
 \begin{enumerate}
-\itemsep0.3em
-\item \textbf{Strong Gross Margins:} 64\% average demonstrates product differentiation
-\item \textbf{Acquisition Target:} Low valuation and IP portfolio may attract strategic buyers
-\item \textbf{APU Technology:} Potential applications in AI/ML in-memory computing
-\item \textbf{Operational Turnaround:} Cost cutting and revenue stabilization possible
-\item \textbf{Valuation:} Trading below book value with 1,536\% upside in bull scenario
+\setlength{\itemsep}{0.4em}
+\item \textbf{Revenue Decline:} 53\% decline over 5 years with -15\% 3-year CAGR, indicating persistent market share losses
+\item \textbf{Operating Losses:} Negative operating margins averaging -73\%, with no clear path to profitability
+\item \textbf{Cash Burn:} Critical cash level of \$1.0M provides only 12-month runway at current burn rate
+\item \textbf{Market Position:} Less than 1\% market share in niche SRAM market, vulnerable to larger competitors
+\item \textbf{Dilution Risk:} Stock-based compensation at 14.8\% of revenue creates shareholder dilution concerns
 \end{enumerate}
 
-\vspace{0.3cm}
+\vspace{0.5cm}
 
-\subsection{Conclusion}
+\subsubsection{Potential Upside Opportunities}
 
-\noindent High-risk/high-reward opportunity investors The current financial trajectory presents significant challenges, but the company's technology assets and potential for strategic acquisition provide speculative upside for investors with very high risk tolerance.
+\begin{enumerate}
+\setlength{\itemsep}{0.4em}
+\item \textbf{Product Differentiation:} 63.9\% average gross margin demonstrates strong pricing power
+\item \textbf{Acquisition Value:} Low enterprise valuation combined with valuable IP portfolio makes company attractive acquisition target
+\item \textbf{Technology Platform:} APU (Associative Processing Unit) technology has potential applications in AI/ML space
+\item \textbf{Turnaround Potential:} Operational improvements could restore profitability if revenue stabilizes
+\item \textbf{Valuation Upside:} Currently trading significantly below historical valuations with 1,536\% upside in bull scenario
+\end{enumerate}
+
+\vspace{0.5cm}
+
+\subsection{Final Conclusion}
+
+\begin{quote}
+\textit{This investment is suitable only for high-risk/high-reward opportunity investors.} The persistent revenue decline, negative operating margins, and critical cash position present substantial downside risks. However, the company's IP portfolio, potential for acquisition, and strong gross margins provide speculative upside for investors willing to accept high risk. Given the current trajectory, a \textbf{SELL} recommendation is warranted.
+\end{quote}
 
 
 \end{document}
