@@ -1,0 +1,4 @@
+name,probability,five_year_revenue,five_year_cagr,implied_enterprise_value
+Bull Case - Successful Turnaround,25,33044.44418000002,10.000000000000009,99133.33254000006
+Base Case - Stabilization,50,22420.572586000002,1.7893485327267866,33630.85887900001
+Bear Case - Continued Decline,25,12115.673820000002,-9.999999999999998,6057.836910000001
