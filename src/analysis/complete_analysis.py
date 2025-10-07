@@ -297,12 +297,10 @@ def main():
     results, decision = analysis.run_full_pipeline()
     
     print("\n" + "="*80)
-    print("  Complete ANALYSIS FINISHED!")
+    print("  ANALYSIS FINISHED!")
     print("="*80)
     print("  All data sources analyzed")
     print("  All results saved to: data/analysis/")
-    print("  Final investment decision generated")
-    print("  Ready for LaTeX report generation!")
     
     return results, decision
 
