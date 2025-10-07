@@ -104,7 +104,7 @@ def extract_financial_table_v2(df: pd.DataFrame,
     df = df[df['line_item'].notna()]
     df['line_item'] = df['line_item'].astype(str).str.strip()
     df = df[df['line_item'] != '']
-    df = df[~df['line_item'].str.match(r'^[^\w]+$')]  # Remove rows with only punctuation
+    df = df[~df['line_item'].str.match(r'^[^\w]+$')] 
     
     numeric_cols = [col for col in df.columns if col != 'line_item']
     df = DataCleaner.clean_financial_values(df, value_columns=numeric_cols)
@@ -116,7 +116,7 @@ def extract_financial_table_v2(df: pd.DataFrame,
         df.insert(0, 'year', year)
     
     for key, value in reversed(list(metadata.items())):
-        if key not in df.columns:  # Don't insert if column already exists
+        if key not in df.columns:  
             df.insert(0, key, value)
     
     return df

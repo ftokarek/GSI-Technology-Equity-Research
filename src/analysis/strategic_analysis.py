@@ -25,7 +25,7 @@ class StrategicAnalyzer:
         
         horizons = {}
         
-        monthly_burn_rate = latest_data['cash'] / 12  # Approximation
+        monthly_burn_rate = latest_data['cash'] / 12  
         cash_runway_months = latest_data['cash'] / monthly_burn_rate if monthly_burn_rate > 0 else np.inf
         
         horizons['short_term'] = {

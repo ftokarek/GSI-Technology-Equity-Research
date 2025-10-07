@@ -48,7 +48,7 @@ def extract_financial_table(df: pd.DataFrame,
                 else:
                     clean_name = re.sub(r'[^\w\s\-/]', '', col_str)
                     clean_name = re.sub(r'\s+', '_', clean_name)
-                    new_columns.append(clean_name.lower()[:50])  # Limit length
+                    new_columns.append(clean_name.lower()[:50]) 
     
     df.columns = new_columns
     
@@ -83,7 +83,7 @@ def extract_annual_report(excel_file: Path) -> dict:
         'compensation': []
     }
     
-    for sheet_name in categories['balance_sheet'][:3]:  # Limit to avoid duplicates
+    for sheet_name in categories['balance_sheet'][:3]: 
         try:
             df = parser.read_sheet(sheet_name)
             df_clean = extract_financial_table(df, 'balance_sheet', sheet_name, metadata)

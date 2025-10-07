@@ -34,7 +34,7 @@ class ValuationAnalyzer:
         
         market_cap = np.nan
         if pd.notna(current_price):
-            market_cap = current_price * 1000  # Placeholder calculation
+            market_cap = current_price * 1000 
         
         revenue = latest_income.get('revenue', np.nan)
         ebitda = latest_income.get('ebitda', np.nan)
@@ -43,22 +43,22 @@ class ValuationAnalyzer:
         stockholders_equity = latest_balance.get('stockholders_equity', np.nan)
         
         if pd.notna(net_income) and net_income > 0 and pd.notna(market_cap):
-            pe_ratio = market_cap / (net_income * 1000)  # Convert to millions
+            pe_ratio = market_cap / (net_income * 1000) 
         else:
             pe_ratio = np.nan
         
         if pd.notna(stockholders_equity) and stockholders_equity > 0 and pd.notna(market_cap):
-            pbv_ratio = market_cap / (stockholders_equity * 1000)  # Convert to millions
+            pbv_ratio = market_cap / (stockholders_equity * 1000) 
         else:
             pbv_ratio = np.nan
         
         if pd.notna(ebitda) and ebitda > 0 and pd.notna(market_cap):
-            ev_ebitda = market_cap / (ebitda * 1000)  # Convert to millions
+            ev_ebitda = market_cap / (ebitda * 1000)  
         else:
             ev_ebitda = np.nan
         
         if pd.notna(revenue) and revenue > 0 and pd.notna(market_cap):
-            ev_sales = market_cap / (revenue * 1000)  # Convert to millions
+            ev_sales = market_cap / (revenue * 1000)  
         else:
             ev_sales = np.nan
         
@@ -151,7 +151,7 @@ class ValuationAnalyzer:
         multiples = self.calculate_multiples()
         if pd.notna(multiples['pe_ratio']) and pd.notna(multiples['net_income']):
             industry_pe = 15.0
-            fair_value_pe = (multiples['net_income'] * 1000) * industry_pe / 1000  # Convert to millions
+            fair_value_pe = (multiples['net_income'] * 1000) * industry_pe / 1000 
             fair_value['pe_method'] = {
                 'method': 'P/E Multiple',
                 'industry_pe': industry_pe,
@@ -161,7 +161,7 @@ class ValuationAnalyzer:
         
         if pd.notna(multiples['pbv_ratio']) and pd.notna(multiples['stockholders_equity']):
             industry_pbv = 1.5
-            fair_value_pbv = (multiples['stockholders_equity'] * 1000) * industry_pbv / 1000  # Convert to millions
+            fair_value_pbv = (multiples['stockholders_equity'] * 1000) * industry_pbv / 1000  
             fair_value['pbv_method'] = {
                 'method': 'P/BV Multiple',
                 'industry_pbv': industry_pbv,
@@ -180,7 +180,7 @@ class ValuationAnalyzer:
         
         if pd.notna(multiples['revenue']):
             industry_ev_sales = 2.0
-            fair_value_revenue = (multiples['revenue'] * 1000) * industry_ev_sales / 1000  # Convert to millions
+            fair_value_revenue = (multiples['revenue'] * 1000) * industry_ev_sales / 1000  
             fair_value['revenue_method'] = {
                 'method': 'Revenue Multiple',
                 'industry_ev_sales': industry_ev_sales,
@@ -260,10 +260,10 @@ class ValuationAnalyzer:
         recent_cash = balance_df[balance_df['year'] >= 2020]['cash'].mean()
         recent_current_ratio = balance_df[balance_df['year'] >= 2020]['current_ratio'].mean()
         
-        if pd.notna(recent_cash) and recent_cash > 10000:  # More than $10M
+        if pd.notna(recent_cash) and recent_cash > 10000:  
             score += 1
             factors.append('Strong cash position')
-        elif pd.notna(recent_cash) and recent_cash < 1000:  # Less than $1M
+        elif pd.notna(recent_cash) and recent_cash < 1000:  
             score -= 2
             factors.append('Weak cash position')
         

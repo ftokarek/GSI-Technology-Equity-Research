@@ -63,7 +63,7 @@ def main():
     successful_scripts = sum(1 for success in results.values() if success)
     
     for description, success in results.items():
-        status = "✓ SUCCESS" if success else "✗ FAILED"
+        status = "✓ SUCCESS" if success else "FAILED"
         print(f"{status:12} - {description}")
     
     print()
