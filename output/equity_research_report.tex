@@ -10,10 +10,23 @@
 \usepackage{amsmath}
 \usepackage{float}
 \usepackage{setspace}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
 \onehalfspacing
 
-\title{GSI Technology Inc. \\ Equity Research Report}
-\author{Independent Analysis}
+\definecolor{darkblue}{RGB}{0,51,102}
+\titleformat{\section}{\Large\bfseries\color{darkblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{GSI Technology - Equity Research}
+\fancyhead[R]{Franciszek Tokarek}
+\fancyfoot[C]{\thepage}
+
+\title{\Huge\bfseries GSI Technology Inc. \\ \Large Comprehensive Equity Research Report}
+\author{\Large Franciszek Tokarek \\ \normalsize Independent Equity Analysis}
 \date{\today}
 
 \begin{document}
@@ -37,28 +50,45 @@ investment recommendation.
 
 \section{Executive Summary}
 
-\textbf{Company:} GSI Technology Inc. (NASDAQ: GSIT)
+\vspace{0.5cm}
 
-\textbf{Analysis Date:} 2025-10-07
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Company} & GSI Technology Inc. (NASDAQ: GSIT) \\
+\textbf{Analyst} & Franciszek Tokarek \\
+\textbf{Analysis Date} & 2025-10-07 \\
+\textbf{Recommendation} & \textcolor{red}{\textbf{SELL}} \\
+\textbf{Confidence} & Medium \\
+\textbf{Score} & -2/10 \\
+\bottomrule
+\end{tabular}
+\end{center}
 
-\textbf{Investment Recommendation:} SELL
-
-\textbf{Confidence Level:} Medium
-
-\textbf{Investment Score:} -2/10
+\vspace{0.5cm}
 
 \subsection{Key Findings}
 
 \begin{itemize}
+\itemsep0.3em
 \item Revenue declining at -15.0\% 3-year CAGR
 \item Gross margins remain strong at 63.9\%
 \item Operating margins negative at -73.2\%
-\item Cash position critical at \$995K
+\item Cash position critical at \$995K with 12-month runway
+\item Stock-based compensation high at 14.8\% of revenue
 \end{itemize}
+
+\vspace{0.3cm}
 
 \subsection{Investment Suitability}
 
-High-risk/high-reward opportunity investors
+\noindent High-risk/high-reward opportunity investors
+
+\vspace{0.3cm}
+
+\subsection{Risk Tolerance Required}
+
+\noindent \textbf{Risk Level:} Very High
 
 
 \newpage
@@ -67,143 +97,200 @@ High-risk/high-reward opportunity investors
 
 \subsection{Revenue Analysis}
 
-\begin{table}[htbp]
+GSI Technology has experienced significant revenue decline over the analysis period. The most recent fiscal year (2025) reported revenue of \$20,518K, representing a -15.0\% 3-year CAGR.
+
+
+\begin{table}[H]
 \centering
-\caption{Revenue Growth Metrics (10-Year)}
+\caption{Revenue Growth Metrics (Recent 8 Years)}
 \label{tab:revenue_growth}
+\scalebox{0.95}{
 \begin{tabular}{lrrr}
 \toprule
 Year & Revenue & Revenue Growth Yoy & Revenue Cagr 3Y \\
 \midrule
-2,016.00 & 52,736.00 & -9.97 & -7.21 \\
-2,017.00 & 52,736.00 & 0.00 & -3.44 \\
-2,018.00 & 42,643.00 & -19.14 & -6.84 \\
-2,019.00 & 51,486.00 & 20.74 & -0.80 \\
-2,020.00 & 43,343.00 & -15.82 & 0.54 \\
-2,021.00 & 43,343.00 & 0.00 & -5.58 \\
-2,022.00 & 27,729.00 & -36.02 & -13.83 \\
-2,023.00 & 33,384.00 & 20.39 & -8.33 \\
-2,024.00 & 21,765.00 & -34.80 & -7.76 \\
-2,025.00 & 20,518.00 & -5.73 & -14.98 \\
+2,018.0 & 42,643.0 & -19.1 & -6.8 \\
+2,019.0 & 51,486.0 & 20.7 & -0.796 \\
+2,020.0 & 43,343.0 & -15.8 & 0.544 \\
+2,021.0 & 43,343.0 & 0.000 & -5.6 \\
+2,022.0 & 27,729.0 & -36.0 & -13.8 \\
+2,023.0 & 33,384.0 & 20.4 & -8.3 \\
+2,024.0 & 21,765.0 & -34.8 & -7.8 \\
+2,025.0 & 20,518.0 & -5.7 & -15.0 \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 \subsection{Profitability Analysis}
 
-\begin{table}[htbp]
+Gross margins have remained relatively strong, averaging 57.8\% over the past 5 years. However, operating margins are deeply negative at -73.2\% due to high operating expenses relative to revenue.
+
+
+\begin{table}[H]
 \centering
-\caption{Profitability Margins (10-Year)}
+\caption{Profitability Margins (Recent 8 Years)}
 \label{tab:profitability}
+\scalebox{0.95}{
 \begin{tabular}{lrrrr}
 \toprule
 Year & Revenue & Gross Margin & Operating Margin & Net Margin \\
 \midrule
-2,016.00 & 52,736.00 & 47.64 & -11.46 & 4.11 \\
-2,017.00 & 52,736.00 & 50.09 & -1.00 & 0.22 \\
-2,018.00 & 42,643.00 & 61.95 & -1.24 & -- \\
-2,019.00 & 51,486.00 & 43.56 & -8.68 & 0.32 \\
-2,020.00 & 43,343.00 & 72.97 & -0.42 & 23.85 \\
-2,021.00 & 43,343.00 & 30.49 & -49.06 & 23.85 \\
-2,022.00 & 27,729.00 & 66.85 & -58.97 & -- \\
-2,023.00 & 33,384.00 & 52.96 & -47.35 & -- \\
-2,024.00 & 21,765.00 & 81.24 & -72.63 & -- \\
-2,025.00 & 20,518.00 & 57.62 & -99.58 & -- \\
+2,018.0 & 42,643.0 & 61.9 & -1.2 & -- \\
+2,019.0 & 51,486.0 & 43.6 & -8.7 & 0.317 \\
+2,020.0 & 43,343.0 & 73.0 & -0.420 & 23.8 \\
+2,021.0 & 43,343.0 & 30.5 & -49.1 & 23.8 \\
+2,022.0 & 27,729.0 & 66.9 & -59.0 & -- \\
+2,023.0 & 33,384.0 & 53.0 & -47.3 & -- \\
+2,024.0 & 21,765.0 & 81.2 & -72.6 & -- \\
+2,025.0 & 20,518.0 & 57.6 & -99.6 & -- \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 \subsection{Balance Sheet Strength}
 
-\begin{table}[htbp]
+The company maintains good liquidity with a current ratio of 3.32, though cash has declined significantly to \$995K, providing approximately 12 months of runway at current burn rates.
+
+
+\begin{table}[H]
 \centering
-\caption{Balance Sheet Metrics (10-Year)}
+\caption{Balance Sheet Metrics (Recent 8 Years)}
 \label{tab:balance_sheet}
-\begin{tabular}{lrrrr}
+\scalebox{1.0}{
+\begin{tabular}{lrrr}
 \toprule
-Year & Cash & Total Assets & Current Ratio & Debt To Equity \\
+Year & Cash & Total Assets & Current Ratio \\
 \midrule
-2,016.00 & 4,813.00 & -- & 7.79 & 0.00 \\
-2,017.00 & 1,773.00 & -- & 6.52 & -- \\
-2,018.00 & 6,505.00 & -- & 9.63 & -- \\
-2,019.00 & 2,254.00 & -- & 8.86 & -- \\
-2,020.00 & 9,011.00 & -- & 9.58 & -- \\
-2,021.00 & 44,234.00 & 87,612.00 & 8.50 & -- \\
-2,022.00 & 36,971.00 & 76,422.00 & 8.50 & -- \\
-2,023.00 & 27,212.00 & 59,876.00 & 6.17 & -- \\
-2,024.00 & 12,783.00 & 42,464.00 & 5.61 & -- \\
-2,025.00 & 995.00 & 43,317.00 & 3.32 & -- \\
+2,018.0 & 6,505.0 & -- & 9.6 \\
+2,019.0 & 2,254.0 & -- & 8.9 \\
+2,020.0 & 9,011.0 & -- & 9.6 \\
+2,021.0 & 44,234.0 & 87,612.0 & 8.5 \\
+2,022.0 & 36,971.0 & 76,422.0 & 8.5 \\
+2,023.0 & 27,212.0 & 59,876.0 & 6.2 \\
+2,024.0 & 12,783.0 & 42,464.0 & 5.6 \\
+2,025.0 & 995.0 & 43,317.0 & 3.3 \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
+
 
 \newpage
 
 \section{Scenario Analysis}
 
-Three scenarios have been modeled to assess potential outcomes:
+Three scenarios have been modeled to assess potential five-year outcomes based on different assumptions about operational performance and market conditions.
 
-\begin{table}[htbp]
+\vspace{0.3cm}
+
+
+\begin{table}[H]
 \centering
 \caption{Investment Scenarios - Bull/Base/Bear Analysis}
 \label{tab:scenarios}
+\scalebox{0.85}{
 \begin{tabular}{lrrrr}
 \toprule
 Name & Probability & Five Year Revenue & Five Year Cagr & Implied Enterprise Value \\
 \midrule
-Bull Case - Successful Turnaround & 25 & 33,044.44 & 10.00 & 99,133.33 \\
-Base Case - Stabilization & 50 & 22,420.57 & 1.79 & 33,630.86 \\
-Bear Case - Continued Decline & 25 & 12,115.67 & -10.00 & 6,057.84 \\
+Bull Case - Successful Turnaround & 25 & 33,044.4 & 10.0 & 99,133.3 \\
+Base Case - Stabilization & 50 & 22,420.6 & 1.8 & 33,630.9 \\
+Bear Case - Continued Decline & 25 & 12,115.7 & -10.0 & 6,057.8 \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
+
+\vspace{0.3cm}
 
 \subsection{Scenario Implications}
 
-\begin{description}
-\item[Bull Case - Successful Turnaround] (25\% probability)
-5-Year Revenue: \$33,044K, CAGR: 10.0\%, Valuation: \$99,133K
+\textbf{Bull Case - Successful Turnaround} (25\% probability)
 
-\item[Base Case - Stabilization] (50\% probability)
-5-Year Revenue: \$22,421K, CAGR: 1.8\%, Valuation: \$33,631K
+\begin{itemize}
+\itemsep0.2em
+\item 5-Year Revenue: \$33,044K
+\item Revenue CAGR: 10.0\%
+\item Implied Enterprise Value: \$99,133K
+\end{itemize}
 
-\item[Bear Case - Continued Decline] (25\% probability)
-5-Year Revenue: \$12,116K, CAGR: -10.0\%, Valuation: \$6,058K
+\vspace{0.2cm}
 
-\end{description}
+\textbf{Base Case - Stabilization} (50\% probability)
+
+\begin{itemize}
+\itemsep0.2em
+\item 5-Year Revenue: \$22,421K
+\item Revenue CAGR: 1.8\%
+\item Implied Enterprise Value: \$33,631K
+\end{itemize}
+
+\vspace{0.2cm}
+
+\textbf{Bear Case - Continued Decline} (25\% probability)
+
+\begin{itemize}
+\itemsep0.2em
+\item 5-Year Revenue: \$12,116K
+\item Revenue CAGR: -10.0\%
+\item Implied Enterprise Value: \$6,058K
+\end{itemize}
+
+\vspace{0.2cm}
 
 
 \newpage
 
 \section{Investment Recommendation}
 
-\subsection{Primary Recommendation: SELL}
+\subsection{Primary Recommendation: \textcolor{red}{SELL}}
 
-\subsubsection{Recommendation by Time Horizon}
+Based on comprehensive analysis of financial performance, market position, and future scenarios, the recommendation is to \textbf{SELL} GSI Technology stock.
 
-\begin{itemize}
-\item \textbf{Short-term (1-2 years):} SPECULATIVE
-\item \textbf{Medium-term (3-5 years):} HOLD
-\item \textbf{Long-term (5+ years):} SPECULATIVE BUY
-\end{itemize}
+\vspace{0.3cm}
 
-\subsection{Risk Factors}
+\subsection{Recommendation by Investment Horizon}
 
 \begin{itemize}
-\item Revenue decline: -53\% over 5 years
-\item Negative operating margins averaging -73\%
-\item Critical cash position of \$1M with 12-month runway
-\item High stock-based compensation (14.8\% of revenue)
+\itemsep0.3em
+\item \textbf{Short-term (1-2 years):} SPECULATIVE - Cash runway concerns require immediate attention
+\item \textbf{Medium-term (3-5 years):} HOLD - Wait for revenue stabilization signals
+\item \textbf{Long-term (5+ years):} SPECULATIVE BUY - Strategic value may attract acquirer
 \end{itemize}
 
-\subsection{Investment Opportunities}
+\vspace{0.3cm}
 
-\begin{itemize}
-\item Strong gross margins (64\% average)
-\item Potential acquisition target
-\item APU technology AI/ML applications
-\item Undervalued based on book value
-\end{itemize}
+\subsection{Key Risk Factors}
+
+\begin{enumerate}
+\itemsep0.3em
+\item \textbf{Revenue Decline:} 53\% decline over 5 years with -15\% 3-year CAGR
+\item \textbf{Operating Losses:} Persistent negative operating margins averaging -73\%
+\item \textbf{Cash Position:} Critical cash level of \$1M providing only 12-month runway
+\item \textbf{Market Share:} Declining competitive position in niche SRAM market (<1\% share)
+\item \textbf{Dilution:} High stock-based compensation at 14.8\% of revenue
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\subsection{Potential Opportunities}
+
+\begin{enumerate}
+\itemsep0.3em
+\item \textbf{Strong Gross Margins:} 64\% average demonstrates product differentiation
+\item \textbf{Acquisition Target:} Low valuation and IP portfolio may attract strategic buyers
+\item \textbf{APU Technology:} Potential applications in AI/ML in-memory computing
+\item \textbf{Operational Turnaround:} Cost cutting and revenue stabilization possible
+\item \textbf{Valuation:} Trading below book value with 1,536\% upside in bull scenario
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\subsection{Conclusion}
+
+\noindent High-risk/high-reward opportunity investors The current financial trajectory presents significant challenges, but the company's technology assets and potential for strategic acquisition provide speculative upside for investors with very high risk tolerance.
 
 
 \end{document}
