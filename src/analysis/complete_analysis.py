@@ -181,7 +181,7 @@ class CompleteEquityAnalysis:
             'investor_profile': {
                 'suitable_for': 'High-risk/high-reward opportunity investors',
                 'not_suitable_for': 'Conservative, income-focused, or capital preservation investors',
-                'risk_tolerance_required': 'Very High',
+                'risk_tolerance_required': 'High',
                 'time_horizon_required': '2-5 years'
             },
             
