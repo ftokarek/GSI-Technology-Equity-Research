@@ -34,42 +34,42 @@ class CompleteEquityAnalysis:
     def load_all_data(self):
         """Load ALL available data sources"""
         print("=" * 80)
-        print("📊 LOADING ALL DATA SOURCES")
+        print("  LOADING ALL DATA SOURCES")
         print("=" * 80)
         
         # Consolidated data
         print("\n1. Consolidated Financial Data:")
         self.income = pd.read_csv("data/consolidated/master_income_statement.csv")
         self.balance = pd.read_csv("data/consolidated/master_balance_sheet.csv")
-        print(f"  ✅ Income: {len(self.income)} years")
-        print(f"  ✅ Balance: {len(self.balance)} years")
+        print(f"    Income: {len(self.income)} years")
+        print(f"    Balance: {len(self.balance)} years")
         
         # Quarterly data
         print("\n2. Quarterly Reports:")
         self.q_income = pd.read_csv("data/processed/quarterly_reports/income_statements.csv")
         self.q_balance = pd.read_csv("data/processed/quarterly_reports/balance_sheets.csv")
-        print(f"  ✅ Quarterly Income: {len(self.q_income)} rows")
-        print(f"  ✅ Quarterly Balance: {len(self.q_balance)} rows")
+        print(f"    Quarterly Income: {len(self.q_income)} rows")
+        print(f"    Quarterly Balance: {len(self.q_balance)} rows")
         
         # Compensation & Governance
         print("\n3. Governance Data:")
         self.compensation = pd.read_csv("data/processed/annual_reports/compensation_data.csv")
         self.proxy = pd.read_csv("data/processed/proxy_statements/proxy_data.csv")
-        print(f"  ✅ Compensation: {len(self.compensation)} rows")
-        print(f"  ✅ Proxy Statements: {len(self.proxy)} rows")
+        print(f"    Compensation: {len(self.compensation)} rows")
+        print(f"    Proxy Statements: {len(self.proxy)} rows")
         
         # Market data
         print("\n4. Market Data:")
         self.market_daily = pd.read_csv("data/processed/market_data/stock_prices.csv")
         self.market_daily['date'] = pd.to_datetime(self.market_daily['date'])
-        print(f"  ✅ Stock Prices: {len(self.market_daily)} days")
+        print(f"    Stock Prices: {len(self.market_daily)} days")
         
         # Cash flow (if available)
         cashflow_path = Path("data/consolidated/master_cashflow.csv")
         if cashflow_path.exists():
             self.cashflow = pd.read_csv(cashflow_path)
             print(f"\n5. Cash Flow:")
-            print(f"  ✅ Cash Flow: {len(self.cashflow)} years")
+            print(f"    Cash Flow: {len(self.cashflow)} years")
         else:
             self.cashflow = None
         
@@ -78,26 +78,26 @@ class CompleteEquityAnalysis:
     def run_complete_analysis(self) -> Dict:
         """Run complete comprehensive analysis"""
         print("\n" + "="*80)
-        print("🚀 COMPLETE EQUITY ANALYSIS - ALL DATA SOURCES")
+        print("  COMPLETE EQUITY ANALYSIS - ALL DATA SOURCES")
         print("="*80)
         
         results = {}
         
         # 1. Financial Metrics
-        print("\n📊 1. CALCULATING FINANCIAL METRICS...")
+        print("\n  1. CALCULATING FINANCIAL METRICS...")
         calculator = FinancialMetricsCalculator(self.income, self.balance, None)
         metrics = calculator.calculate_all_metrics()
         results['financial_metrics'] = metrics
         
         # 2. Trend Analysis
-        print("📈 2. TREND ANALYSIS...")
+        print("  2. TREND ANALYSIS...")
         trend_analyzer = TrendAnalyzer(metrics)
         trend_summary = trend_analyzer.generate_trend_summary()
         trend_analyzer.print_trend_analysis(trend_summary)
         results['trend_analysis'] = trend_summary
         
         # 3. Valuation Analysis
-        print("\n💰 3. VALUATION ANALYSIS...")
+        print("\n  3. VALUATION ANALYSIS...")
         valuation_analyzer = ValuationAnalyzer(metrics, None)
         multiples = valuation_analyzer.calculate_multiples()
         fair_value = valuation_analyzer.calculate_fair_value_estimation()
@@ -114,14 +114,14 @@ class CompleteEquityAnalysis:
         }
         
         # 4. Scenario Analysis
-        print("\n🎯 4. SCENARIO ANALYSIS...")
+        print("\n  4. SCENARIO ANALYSIS...")
         scenario_analyzer = ScenarioAnalyzer(metrics)
         scenario_results = scenario_analyzer.run_scenario_analysis()
         scenario_analyzer.print_scenario_analysis(scenario_results)
         results['scenario_analysis'] = scenario_results
         
         # 5. Strategic Analysis
-        print("\n🎯 5. STRATEGIC ANALYSIS...")
+        print("\n  5. STRATEGIC ANALYSIS...")
         strategic_analyzer = StrategicAnalyzer(metrics, self.income)
         time_horizons = strategic_analyzer.analyze_time_horizons()
         market_opportunity = strategic_analyzer.analyze_market_opportunity()
@@ -138,7 +138,7 @@ class CompleteEquityAnalysis:
         }
         
         # 6. Governance & Compensation Analysis (NEW)
-        print("\n👔 6. GOVERNANCE & COMPENSATION ANALYSIS...")
+        print("\n  6. GOVERNANCE & COMPENSATION ANALYSIS...")
         governance_analyzer = GovernanceAnalyzer(self.compensation, self.proxy, self.income)
         sbc_analysis = governance_analyzer.analyze_stock_based_compensation()
         exec_comp = governance_analyzer.analyze_executive_compensation()
@@ -151,7 +151,7 @@ class CompleteEquityAnalysis:
         }
         
         # 7. Quarterly Analysis (NEW)
-        print("\n📅 7. QUARTERLY ANALYSIS...")
+        print("\n  7. QUARTERLY ANALYSIS...")
         quarterly_analyzer = QuarterlyAnalyzer(self.q_income, self.q_balance)
         seasonality = quarterly_analyzer.analyze_seasonality()
         volatility = quarterly_analyzer.analyze_quarterly_volatility()
@@ -228,11 +228,11 @@ class CompleteEquityAnalysis:
             },
             
             'action_items': [
-                '✅ Monitor Q1/Q2 2026 earnings for stabilization signs',
-                '✅ Watch for financing announcements',
-                '✅ Track APU technology development/adoption',
-                '✅ Monitor for M&A activity in memory sector',
-                '✅ Review cash burn rate quarterly'
+                '  Monitor Q1/Q2 2026 earnings for stabilization signs',
+                '  Watch for financing announcements',
+                '  Track APU technology development/adoption',
+                '  Monitor for M&A activity in memory sector',
+                '  Review cash burn rate quarterly'
             ]
         }
         
@@ -241,37 +241,37 @@ class CompleteEquityAnalysis:
     def print_final_decision(self, decision: Dict):
         """Print final investment decision"""
         print("\n" + "="*80)
-        print("🎯 FINAL INVESTMENT DECISION - ALL FACTORS CONSIDERED")
+        print("  FINAL INVESTMENT DECISION - ALL FACTORS CONSIDERED")
         print("="*80)
         
-        print(f"\n📊 PRIMARY RECOMMENDATION: {decision['primary_recommendation']}")
+        print(f"\n  PRIMARY RECOMMENDATION: {decision['primary_recommendation']}")
         print(f"   Confidence: {decision['confidence']}")
         print(f"   Score: {decision['score']}/10")
         
-        print(f"\n📅 RECOMMENDATIONS BY TIME HORIZON:")
+        print(f"\n  RECOMMENDATIONS BY TIME HORIZON:")
         for horizon, rec in decision['investment_horizons'].items():
             print(f"  {horizon.upper()}: {rec['recommendation']}")
             print(f"    → {rec['reason']}")
         
-        print(f"\n💰 SCENARIO-BASED VALUATIONS:")
+        print(f"\n  SCENARIO-BASED VALUATIONS:")
         for scenario, value in decision['scenarios'].items():
             print(f"  {scenario.replace('_', ' ').title()}: {value}")
         
-        print(f"\n👤 INVESTOR PROFILE:")
+        print(f"\n  INVESTOR PROFILE:")
         print(f"  Suitable for: {decision['investor_profile']['suitable_for']}")
         print(f"  NOT suitable for: {decision['investor_profile']['not_suitable_for']}")
         print(f"  Risk tolerance: {decision['investor_profile']['risk_tolerance_required']}")
         print(f"  Time horizon: {decision['investor_profile']['time_horizon_required']}")
         
-        print(f"\n✅ POSITIVE FACTORS:")
+        print(f"\n  POSITIVE FACTORS:")
         for factor in decision['key_decision_factors']['positive']:
             print(f"    • {factor}")
         
-        print(f"\n⚠️  NEGATIVE FACTORS:")
+        print(f"\n   NEGATIVE FACTORS:")
         for factor in decision['key_decision_factors']['negative']:
             print(f"    • {factor}")
         
-        print(f"\n📋 ACTION ITEMS FOR MONITORING:")
+        print(f"\n  ACTION ITEMS FOR MONITORING:")
         for action in decision['action_items']:
             print(f"  {action}")
     
@@ -280,7 +280,7 @@ class CompleteEquityAnalysis:
         output_dir = Path("data/analysis")
         output_dir.mkdir(exist_ok=True)
         
-        print(f"\n💾 Saving complete analysis results...")
+        print(f"\n  Saving complete analysis results...")
         
         # Save final decision
         decision_df = pd.DataFrame([{
@@ -295,14 +295,14 @@ class CompleteEquityAnalysis:
             'risk_tolerance': decision['investor_profile']['risk_tolerance_required']
         }])
         decision_df.to_csv(output_dir / "complete_investment_decision.csv", index=False)
-        print(f"  ✅ Saved complete_investment_decision.csv")
+        print(f"    Saved complete_investment_decision.csv")
         
         # Save all metrics
         for metric_name, df in results['financial_metrics'].items():
             df.to_csv(output_dir / f"complete_{metric_name}.csv", index=False)
-            print(f"  ✅ Saved complete_{metric_name}.csv")
+            print(f"    Saved complete_{metric_name}.csv")
         
-        print(f"✅ Complete analysis results saved!")
+        print(f"  Complete analysis results saved!")
     
     def run_full_pipeline(self):
         """Run complete analysis pipeline"""
@@ -334,12 +334,12 @@ def main():
     results, decision = analysis.run_full_pipeline()
     
     print("\n" + "="*80)
-    print("✅ COMPLETE ANALYSIS FINISHED!")
+    print("  COMPLETE ANALYSIS FINISHED!")
     print("="*80)
-    print("📊 All data sources analyzed")
-    print("📈 All results saved to: data/analysis/")
-    print("🎯 Final investment decision generated")
-    print("📄 Ready for LaTeX report generation!")
+    print("  All data sources analyzed")
+    print("  All results saved to: data/analysis/")
+    print("  Final investment decision generated")
+    print("  Ready for LaTeX report generation!")
     
     return results, decision
 

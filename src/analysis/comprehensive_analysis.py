@@ -63,7 +63,7 @@ class ComprehensiveEquityAnalysis:
         print("="*80)
         
         # Step 1: Calculate Financial Metrics
-        print("\n📊 STEP 1: CALCULATING FINANCIAL METRICS...")
+        print("\nSTEP 1: CALCULATING FINANCIAL METRICS...")
         calculator = FinancialMetricsCalculator(
             self.income, 
             self.balance, 
@@ -73,12 +73,12 @@ class ComprehensiveEquityAnalysis:
         summary = calculator.get_summary_statistics(metrics)
         
         # Step 2: Trend Analysis
-        print("\n📈 STEP 2: TREND ANALYSIS...")
+        print("\nSTEP 2: TREND ANALYSIS...")
         trend_analyzer = TrendAnalyzer(metrics)
         trend_summary = trend_analyzer.generate_trend_summary()
         
         # Step 3: Valuation Analysis
-        print("\n💰 STEP 3: VALUATION ANALYSIS...")
+        print("\nSTEP 3: VALUATION ANALYSIS...")
         valuation_analyzer = ValuationAnalyzer(metrics, self.market)
         
         # Calculate valuation components
@@ -115,7 +115,7 @@ class ComprehensiveEquityAnalysis:
         Print executive summary of the analysis
         """
         print("\n" + "="*80)
-        print("📋 EXECUTIVE SUMMARY - GSI TECHNOLOGY EQUITY ANALYSIS")
+        print("EXECUTIVE SUMMARY - GSI TECHNOLOGY EQUITY ANALYSIS")
         print("="*80)
         
         # Get key metrics
@@ -128,7 +128,7 @@ class ComprehensiveEquityAnalysis:
         recent_revenue = growth_df[growth_df['year'] >= 2020]['revenue']
         latest_revenue = recent_revenue.iloc[-1] if not recent_revenue.empty else np.nan
         
-        print(f"\n💰 REVENUE PERFORMANCE:")
+        print(f"\nREVENUE PERFORMANCE:")
         if pd.notna(latest_revenue):
             print(f"  Latest Revenue (2025): ${latest_revenue:,.0f}K")
         
@@ -143,7 +143,7 @@ class ComprehensiveEquityAnalysis:
         profit_df = metrics['profitability_metrics']
         recent_margins = profit_df[profit_df['year'] >= 2020]
         
-        print(f"\n📊 PROFITABILITY PERFORMANCE:")
+        print(f"\nPROFITABILITY PERFORMANCE:")
         if not recent_margins.empty:
             avg_gross_margin = recent_margins['gross_margin'].mean()
             avg_operating_margin = recent_margins['operating_margin'].mean()
@@ -154,7 +154,7 @@ class ComprehensiveEquityAnalysis:
         balance_df = metrics['balance_sheet_metrics']
         recent_balance = balance_df[balance_df['year'] >= 2020]
         
-        print(f"\n💼 FINANCIAL POSITION:")
+        print(f"\nFINANCIAL POSITION:")
         if not recent_balance.empty:
             latest_cash = recent_balance.iloc[-1]['cash']
             latest_assets = recent_balance.iloc[-1]['total_assets']
@@ -166,7 +166,7 @@ class ComprehensiveEquityAnalysis:
             print(f"  Latest Current Ratio: {latest_current_ratio:.2f}")
         
         # Valuation Summary
-        print(f"\n🎯 VALUATION SUMMARY:")
+        print(f"\nVALUATION SUMMARY:")
         current_valuation = valuation['current_valuation']
         fair_value = valuation['fair_value_estimation']
         attractiveness = valuation['attractiveness']
@@ -184,28 +184,28 @@ class ComprehensiveEquityAnalysis:
         print(f"  Attractiveness Score: {attractiveness['score']}/10")
         
         # Key Risks and Opportunities
-        print(f"\n⚠️  KEY RISKS:")
+        print(f"\n  KEY RISKS:")
         print(f"  • Declining revenue trend (-53% over 5 years)")
         print(f"  • Negative operating margins (-73% average)")
         print(f"  • Cash burn from $44M to $1M")
         print(f"  • Asset shrinkage from $88M to $43M")
         
-        print(f"\n💡 KEY OPPORTUNITIES:")
+        print(f"\n  KEY OPPORTUNITIES:")
         print(f"  • Strong gross margins (63.9% average)")
         print(f"  • Good liquidity position (current ratio > 3)")
         print(f"  • Potential for operational turnaround")
         print(f"  • Undervalued based on book value")
         
         # Final Recommendation
-        print(f"\n🎯 FINAL RECOMMENDATION:")
+        print(f"\n  FINAL RECOMMENDATION:")
         if attractiveness['recommendation'] in ['STRONG BUY', 'BUY']:
-            print(f"  ✅ {attractiveness['recommendation']} - GSI Technology presents")
+            print(f"    {attractiveness['recommendation']} - GSI Technology presents")
             print(f"     attractive investment opportunity with strong fundamentals")
         elif attractiveness['recommendation'] == 'HOLD':
-            print(f"  ⚠️  {attractiveness['recommendation']} - GSI Technology shows mixed signals")
+            print(f"     {attractiveness['recommendation']} - GSI Technology shows mixed signals")
             print(f"     with both strengths and weaknesses")
         else:
-            print(f"  ❌ {attractiveness['recommendation']} - GSI Technology faces significant")
+            print(f"    {attractiveness['recommendation']} - GSI Technology faces significant")
             print(f"     challenges that outweigh potential opportunities")
     
     def save_comprehensive_results(self, results: Dict, output_dir: str = "data/analysis"):
@@ -215,7 +215,7 @@ class ComprehensiveEquityAnalysis:
         output_path = Path(output_dir)
         output_path.mkdir(exist_ok=True)
         
-        print(f"\n💾 Saving comprehensive analysis results...")
+        print(f"\n  Saving comprehensive analysis results...")
         
         # Save financial metrics (DataFrames)
         financial_metrics = results['financial_metrics']
@@ -223,7 +223,7 @@ class ComprehensiveEquityAnalysis:
             filename = f"financial_{metric_name}.csv"
             filepath = output_path / filename
             df.to_csv(filepath, index=False)
-            print(f"  ✅ Saved {filename}")
+            print(f"    Saved {filename}")
         
         # Save trend analysis (convert dicts to DataFrames)
         trend_analysis = results['trend_analysis']
@@ -233,7 +233,7 @@ class ComprehensiveEquityAnalysis:
             filename = f"trend_{trend_name}.csv"
             filepath = output_path / filename
             trend_df.to_csv(filepath, index=True)
-            print(f"  ✅ Saved {filename}")
+            print(f"    Saved {filename}")
         
         # Save valuation analysis
         valuation_analysis = results['valuation_analysis']
@@ -241,17 +241,17 @@ class ComprehensiveEquityAnalysis:
         # Current valuation
         current_valuation_df = pd.DataFrame([valuation_analysis['current_valuation']])
         current_valuation_df.to_csv(output_path / "valuation_current.csv", index=False)
-        print(f"  ✅ Saved valuation_current.csv")
+        print(f"    Saved valuation_current.csv")
         
         # Fair value estimation
         fair_value_df = pd.DataFrame([valuation_analysis['fair_value_estimation']])
         fair_value_df.to_csv(output_path / "valuation_fair_value.csv", index=False)
-        print(f"  ✅ Saved valuation_fair_value.csv")
+        print(f"    Saved valuation_fair_value.csv")
         
         # Attractiveness
         attractiveness_df = pd.DataFrame([valuation_analysis['attractiveness']])
         attractiveness_df.to_csv(output_path / "valuation_attractiveness.csv", index=False)
-        print(f"  ✅ Saved valuation_attractiveness.csv")
+        print(f"    Saved valuation_attractiveness.csv")
         
         # Save executive summary
         summary_data = {
@@ -267,9 +267,9 @@ class ComprehensiveEquityAnalysis:
         
         summary_df = pd.DataFrame([summary_data])
         summary_df.to_csv(output_path / "executive_summary.csv", index=False)
-        print(f"  ✅ Saved executive_summary.csv")
+        print(f"    Saved executive_summary.csv")
         
-        print(f"✅ All comprehensive analysis results saved!")
+        print(f"  All comprehensive analysis results saved!")
     
     def run_full_analysis(self):
         """
@@ -300,11 +300,11 @@ def main():
     results = analysis.run_full_analysis()
     
     print("\n" + "="*80)
-    print("✅ COMPREHENSIVE ANALYSIS COMPLETE!")
+    print("  COMPREHENSIVE ANALYSIS COMPLETE!")
     print("="*80)
-    print("📊 Results saved to: data/analysis/")
-    print("📈 Ready for LaTeX report generation!")
-    print("🎯 Investment recommendation generated!")
+    print("  Results saved to: data/analysis/")
+    print("  Ready for LaTeX report generation!")
+    print("  Investment recommendation generated!")
     
     return results
 
