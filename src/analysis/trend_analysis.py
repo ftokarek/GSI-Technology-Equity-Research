@@ -266,8 +266,10 @@ class TrendAnalyzer:
             print(f"    Operating Margin: {data['avg_operating_margin']:.1f}%")
             if 'avg_net_margin' in data and pd.notna(data['avg_net_margin']):
                 print(f"    Net Margin: {data['avg_net_margin']:.1f}%")
-            print(f"    Gross Trend: {data['gross_margin_trend'].upper()}")
-            print(f"    Operating Trend: {data['operating_margin_trend'].upper()}")
+            if 'gross_margin_trend' in data:
+                print(f"    Gross Trend: {data['gross_margin_trend'].upper()}")
+            if 'operating_margin_trend' in data:
+                print(f"    Operating Trend: {data['operating_margin_trend'].upper()}")
             
             if 'best_gross_margin' in data:
                 print(f"    Best Gross Margin: {data['best_gross_margin']:.1f}% ({data['best_gross_margin_year']})")
@@ -285,8 +287,10 @@ class TrendAnalyzer:
             if pd.notna(data['avg_debt_to_equity']):
                 print(f"    Avg D/E: {data['avg_debt_to_equity']:.2f}")
             print(f"    Avg Current Ratio: {data['avg_current_ratio']:.2f}")
-            print(f"    Cash Trend: {data['cash_trend'].upper()}")
-            print(f"    Assets Trend: {data['assets_trend'].upper()}")
+            if 'cash_trend' in data:
+                print(f"    Cash Trend: {data['cash_trend'].upper()}")
+            if 'assets_trend' in data:
+                print(f"    Assets Trend: {data['assets_trend'].upper()}")
             
             if 'peak_cash' in data:
                 print(f"    Peak Cash: ${data['peak_cash']:,.0f}K ({data['peak_cash_year']})")
