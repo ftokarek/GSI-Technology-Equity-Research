@@ -1,0 +1,15 @@
+\babel@toc {english}{}\relax 
+\contentsline {section}{\numberline {1}Executive Summary}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Key Findings}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Investment Suitability}{3}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Financial Performance Analysis}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Revenue Analysis}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Profitability Analysis}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Balance Sheet Strength}{4}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Scenario Analysis}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Scenario Implications}{5}{subsection.3.1}%
+\contentsline {section}{\numberline {4}Investment Recommendation}{6}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Primary Recommendation: SELL}{6}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}Recommendation by Time Horizon}{6}{subsubsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.2}Risk Factors}{6}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Investment Opportunities}{6}{subsection.4.3}%
