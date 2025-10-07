@@ -25,6 +25,38 @@ class LaTeXReportGenerator:
         
         print(f"Loaded {7} analysis files")
         
+    def format_value_for_latex(self, val, col_name: str) -> str:
+        if pd.isna(val):
+            return "--"
+        
+        col_lower = col_name.lower()
+        
+        if col_lower == 'year':
+            return f"{int(val)}"
+        
+        if isinstance(val, (int, np.integer)):
+            if 'year' in col_lower:
+                return f"{val}"
+            return f"{val:,}"
+        
+        if isinstance(val, (float, np.floating)):
+            if 'margin' in col_lower or 'growth' in col_lower or 'cagr' in col_lower or 'roe' in col_lower or 'roa' in col_lower or 'roic' in col_lower or 'return' in col_lower:
+                return f"{val:.1f}\\%"
+            elif 'ratio' in col_lower or 'turnover' in col_lower:
+                return f"{val:.2f}"
+            elif col_lower in ['revenue', 'cash', 'ebit', 'ebitda', 'net_income', 'gross_profit'] or 'assets' in col_lower or 'debt' in col_lower or 'equity' in col_lower:
+                if abs(val) >= 1:
+                    return f"\\${val/1000:.1f}M"
+                else:
+                    return f"\\${val:.3f}M"
+            else:
+                if abs(val) < 1:
+                    return f"{val:.3f}"
+                else:
+                    return f"{val:,.1f}"
+        
+        return str(val).replace('_', ' ')
+    
     def generate_latex_table(self, df: pd.DataFrame, caption: str, label: str, scale: float = 0.9) -> str:
         
         num_cols = len(df.columns)
@@ -44,18 +76,8 @@ class LaTeXReportGenerator:
         
         for _, row in df.iterrows():
             row_data = []
-            for val in row:
-                if pd.isna(val):
-                    row_data.append("--")
-                elif isinstance(val, (int, np.integer)):
-                    row_data.append(f"{val:,}")
-                elif isinstance(val, (float, np.floating)):
-                    if abs(val) < 1:
-                        row_data.append(f"{val:.3f}")
-                    else:
-                        row_data.append(f"{val:,.1f}")
-                else:
-                    row_data.append(str(val).replace('_', ' '))
+            for col_name, val in row.items():
+                row_data.append(self.format_value_for_latex(val, col_name))
             
             latex += " & ".join(row_data) + " \\\\\n"
         
@@ -92,7 +114,7 @@ class LaTeXReportGenerator:
         latex += f"\\item Revenue declining at {self.growth_metrics.tail(1)['revenue_cagr_3y'].iloc[0]:.1f}\\% 3-year CAGR\n"
         latex += f"\\item Gross margins remain strong at {self.profitability.tail(3)['gross_margin'].mean():.1f}\\%\n"
         latex += f"\\item Operating margins negative at {self.profitability.tail(3)['operating_margin'].mean():.1f}\\%\n"
-        latex += f"\\item Cash position critical at \\${self.balance_metrics.iloc[-1]['cash']:,.0f}K with 12-month runway\n"
+        latex += f"\\item Cash position critical at \\${self.balance_metrics.iloc[-1]['cash']/1000:.1f}M with 12-month runway\n"
         latex += f"\\item Stock-based compensation high at 14.8\\% of revenue\n"
         latex += "\\end{itemize}\n\n"
         latex += "\\vspace{0.3cm}\n\n"
@@ -111,10 +133,11 @@ class LaTeXReportGenerator:
         
         latex += "\\subsection{Revenue Analysis}\n\n"
         latex += "GSI Technology has experienced significant revenue decline over the analysis period. "
-        latex += f"The most recent fiscal year (2025) reported revenue of \\${self.growth_metrics.iloc[-1]['revenue']:,.0f}K, "
+        latex += f"The most recent fiscal year (2025) reported revenue of \\${self.growth_metrics.iloc[-1]['revenue']/1000:.1f}M, "
         latex += f"representing a {self.growth_metrics.iloc[-1]['revenue_cagr_3y']:.1f}\\% 3-year CAGR.\n\n"
         
         recent_growth = self.growth_metrics.tail(8)
+        latex += "\\small{\\textit{Note: Revenue figures in millions (\\$M), growth rates and CAGR in percentages.}}\n\n"
         latex += self.generate_latex_table(
             recent_growth[['year', 'revenue', 'revenue_growth_yoy', 'revenue_cagr_3y']],
             "Revenue Growth Metrics (Recent 8 Years)",
@@ -128,6 +151,7 @@ class LaTeXReportGenerator:
         latex += "due to high operating expenses relative to revenue.\n\n"
         
         recent_profit = self.profitability.tail(8)
+        latex += "\\small{\\textit{Note: Revenue in millions (\\$M), margins in percentages (\\%).}}\n\n"
         latex += self.generate_latex_table(
             recent_profit[['year', 'revenue', 'gross_margin', 'operating_margin', 'net_margin']],
             "Profitability Margins (Recent 8 Years)",
@@ -137,11 +161,12 @@ class LaTeXReportGenerator:
         
         latex += "\\subsection{Balance Sheet Strength}\n\n"
         latex += f"The company maintains good liquidity with a current ratio of {self.balance_metrics.iloc[-1]['current_ratio']:.2f}, "
-        latex += f"though cash has declined significantly to \\${self.balance_metrics.iloc[-1]['cash']:,.0f}K, "
+        latex += f"though cash has declined significantly to \\${self.balance_metrics.iloc[-1]['cash']/1000:.1f}M, "
         latex += "providing approximately 12 months of runway at current burn rates.\n\n"
         
         recent_balance = self.balance_metrics.tail(8)
         balance_subset = recent_balance[['year', 'cash', 'total_assets', 'current_ratio']].copy()
+        latex += "\\small{\\textit{Note: Cash and assets in millions (\\$M), ratios are unitless.}}\n\n"
         latex += self.generate_latex_table(
             balance_subset,
             "Balance Sheet Metrics (Recent 8 Years)",
@@ -173,9 +198,9 @@ class LaTeXReportGenerator:
             latex += f"\\textbf{{{scenario_name}}} ({scenario['probability']:.0f}\\% probability)\n\n"
             latex += "\\begin{itemize}\n"
             latex += "\\itemsep0.2em\n"
-            latex += f"\\item 5-Year Revenue: \\${scenario['five_year_revenue']:,.0f}K\n"
+            latex += f"\\item 5-Year Revenue: \\${scenario['five_year_revenue']/1000:.1f}M\n"
             latex += f"\\item Revenue CAGR: {scenario['five_year_cagr']:.1f}\\%\n"
-            latex += f"\\item Implied Enterprise Value: \\${scenario['implied_enterprise_value']:,.0f}K\n"
+            latex += f"\\item Implied Enterprise Value: \\${scenario['implied_enterprise_value']/1000:.1f}M\n"
             latex += "\\end{itemize}\n\n"
             latex += "\\vspace{0.2cm}\n\n"
         
@@ -205,7 +230,7 @@ class LaTeXReportGenerator:
         latex += "\\itemsep0.3em\n"
         latex += "\\item \\textbf{Revenue Decline:} 53\\% decline over 5 years with -15\\% 3-year CAGR\n"
         latex += "\\item \\textbf{Operating Losses:} Persistent negative operating margins averaging -73\\%\n"
-        latex += "\\item \\textbf{Cash Position:} Critical cash level of \\$1M providing only 12-month runway\n"
+        latex += f"\\item \\textbf{{Cash Position:}} Critical cash level of \\${self.balance_metrics.iloc[-1]['cash']/1000:.1f}M providing only 12-month runway\n"
         latex += "\\item \\textbf{Market Share:} Declining competitive position in niche SRAM market (<1\\% share)\n"
         latex += "\\item \\textbf{Dilution:} High stock-based compensation at 14.8\\% of revenue\n"
         latex += "\\end{enumerate}\n\n"
