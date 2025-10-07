@@ -106,13 +106,11 @@ class FinancialMetricsCalculator:
             operating_expenses = row.get('operating_expenses', np.nan)
             net_income = row.get('net_income', np.nan)
             
-            # Calculate EBIT (Operating Income)
             if pd.notna(gross_profit) and pd.notna(operating_expenses):
                 ebit = gross_profit - operating_expenses
             else:
                 ebit = np.nan
             
-            # Calculate EBITDA (approximation)
             # Note: We don't have depreciation data, so EBITDA ≈ EBIT
             ebitda = ebit
             
@@ -197,7 +195,6 @@ class FinancialMetricsCalculator:
             year = int(row['year'])
             net_income = row.get('net_income', np.nan)
             
-            # Get corresponding balance sheet data
             balance_row = self.balance[self.balance['year'] == year]
             if len(balance_row) > 0:
                 balance_row = balance_row.iloc[0]
@@ -257,7 +254,6 @@ class FinancialMetricsCalculator:
             year = int(row['year'])
             revenue = row.get('revenue', np.nan)
             
-            # Get corresponding balance sheet data
             balance_row = self.balance[self.balance['year'] == year]
             if len(balance_row) > 0:
                 balance_row = balance_row.iloc[0]
@@ -312,7 +308,6 @@ class FinancialMetricsCalculator:
             if recent_df.empty:
                 continue
             
-            # Calculate statistics
             stats = {}
             
             # Last 3 years

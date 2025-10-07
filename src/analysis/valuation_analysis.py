@@ -28,16 +28,13 @@ class ValuationAnalyzer:
         """
         multiples = {}
         
-        # Get latest data
         income_df = self.metrics['profitability_metrics']
         balance_df = self.metrics['balance_sheet_metrics']
         
-        # Get most recent year with data
         latest_year = income_df['year'].max()
         latest_income = income_df[income_df['year'] == latest_year].iloc[0]
         latest_balance = balance_df[balance_df['year'] == latest_year].iloc[0]
         
-        # Get market data if available
         if self.market is not None and not self.market.empty:
             latest_market = self.market[self.market['year'] == latest_year]
             if not latest_market.empty:
@@ -48,14 +45,12 @@ class ValuationAnalyzer:
         else:
             current_price = np.nan
         
-        # Calculate market cap (approximation)
         # Note: We don't have shares outstanding, so we'll use book value as proxy
         market_cap = np.nan
         if pd.notna(current_price):
             # This is a placeholder - in real analysis we'd need shares outstanding
             market_cap = current_price * 1000  # Placeholder calculation
         
-        # Calculate multiples
         revenue = latest_income.get('revenue', np.nan)
         ebitda = latest_income.get('ebitda', np.nan)
         net_income = latest_income.get('net_income', np.nan)
@@ -109,19 +104,16 @@ class ValuationAnalyzer:
         """
         Calculate DCF valuation (simplified version)
         """
-        # Get historical data for projections
         income_df = self.metrics['profitability_metrics']
         recent_data = income_df[income_df['year'] >= 2020].copy()
         
         if recent_data.empty:
             return {'error': 'Insufficient data for DCF analysis'}
         
-        # Calculate historical averages
         avg_revenue_growth = recent_data['revenue'].pct_change().mean() * 100
         avg_ebitda_margin = (recent_data['ebitda'] / recent_data['revenue'] * 100).mean()
         avg_net_margin = (recent_data['net_income'] / recent_data['revenue'] * 100).mean()
         
-        # Get latest values
         latest_year = recent_data['year'].max()
         latest_revenue = recent_data[recent_data['year'] == latest_year]['revenue'].iloc[0]
         latest_ebitda = recent_data[recent_data['year'] == latest_year]['ebitda'].iloc[0]
@@ -155,12 +147,10 @@ class ValuationAnalyzer:
             current_revenue = projected_revenue
             current_ebitda = projected_ebitda
         
-        # Calculate terminal value
         terminal_fcf = projections[-1]['fcf'] * (1 + terminal_growth_rate/100)
         terminal_value = terminal_fcf / ((discount_rate - terminal_growth_rate) / 100)
         pv_terminal_value = terminal_value / ((1 + discount_rate/100) ** projection_years)
         
-        # Calculate enterprise value
         pv_cash_flows = sum([p['pv_fcf'] for p in projections])
         enterprise_value = pv_cash_flows + pv_terminal_value
         
@@ -236,7 +226,6 @@ class ValuationAnalyzer:
                 'confidence': 'low'
             }
         
-        # Calculate average fair value
         valid_values = [v['fair_value'] for v in fair_value.values() if 'fair_value' in v]
         if valid_values:
             fair_value['average'] = np.mean(valid_values)
@@ -249,7 +238,6 @@ class ValuationAnalyzer:
         """
         Analyze valuation attractiveness and investment recommendation
         """
-        # Get current multiples
         multiples = self.calculate_multiples()
         fair_value = self.calculate_fair_value_estimation()
         
@@ -258,7 +246,6 @@ class ValuationAnalyzer:
             'fair_value_estimation': fair_value
         }
         
-        # Calculate attractiveness score
         score = 0
         factors = []
         
@@ -362,12 +349,12 @@ class ValuationAnalyzer:
         Print comprehensive valuation analysis
         """
         print("\n" + "="*80)
-        print("💰 VALUATION ANALYSIS")
+        print(" VALUATION ANALYSIS")
         print("="*80)
         
         # Current Multiples
         multiples = valuation_results['current_valuation']
-        print(f"\n📊 CURRENT VALUATION MULTIPLES:")
+        print(f"\n CURRENT VALUATION MULTIPLES:")
         print(f"  Year: {multiples['year']}")
         if pd.notna(multiples['current_price']):
             print(f"  Current Price: ${multiples['current_price']:.2f}")
@@ -382,7 +369,7 @@ class ValuationAnalyzer:
         
         # Fair Value Estimation
         fair_value = valuation_results['fair_value_estimation']
-        print(f"\n🎯 FAIR VALUE ESTIMATION:")
+        print(f"\n FAIR VALUE ESTIMATION:")
         for method, data in fair_value.items():
             if method != 'average' and method != 'median' and method != 'std':
                 print(f"  {data['method']}: ${data['fair_value']:.2f}M (Confidence: {data['confidence']})")
@@ -394,7 +381,7 @@ class ValuationAnalyzer:
         
         # Investment Recommendation
         attractiveness = valuation_results['attractiveness']
-        print(f"\n🎯 INVESTMENT RECOMMENDATION:")
+        print(f"\n INVESTMENT RECOMMENDATION:")
         print(f"  Recommendation: {attractiveness['recommendation']}")
         print(f"  Confidence: {attractiveness['confidence']}")
         print(f"  Score: {attractiveness['score']}/10")
@@ -405,7 +392,7 @@ class ValuationAnalyzer:
         # DCF Details (if available)
         if 'dcf_method' in fair_value:
             dcf_details = fair_value['dcf_method']['details']
-            print(f"\n📈 DCF ANALYSIS DETAILS:")
+            print(f"\n DCF ANALYSIS DETAILS:")
             print(f"  Projection Years: {dcf_details['projection_years']}")
             print(f"  Discount Rate: {dcf_details['discount_rate']:.1f}%")
             print(f"  Terminal Growth: {dcf_details['terminal_growth_rate']:.1f}%")

@@ -80,7 +80,6 @@ class ScenarioAnalyzer:
             # Operating margin improvement (cap at 15%)
             operating_margin = min(operating_margin + operating_margin_improvement, 15.0)
             
-            # Calculate metrics
             gross_profit = revenue * (gross_margin / 100)
             operating_income = revenue * (operating_margin / 100)
             net_income = operating_income * 0.75  # 25% tax approximation
@@ -115,7 +114,6 @@ class ScenarioAnalyzer:
             'target_valuation_multiple': 3.0  # EV/Sales multiple
         }
         
-        # Calculate implied valuation
         scenario['implied_enterprise_value'] = scenario['five_year_revenue'] * scenario['target_valuation_multiple']
         
         return scenario
@@ -145,7 +143,6 @@ class ScenarioAnalyzer:
             # Operating margin gradual improvement (cap at 5%)
             operating_margin = min(operating_margin + operating_margin_improvement, 5.0)
             
-            # Calculate metrics
             gross_profit = revenue * (gross_margin / 100)
             operating_income = revenue * (operating_margin / 100)
             net_income = operating_income * 0.75
@@ -205,7 +202,6 @@ class ScenarioAnalyzer:
             # Operating margin deteriorates slightly
             operating_margin = operating_margin - 2.0
             
-            # Calculate metrics
             gross_profit = revenue * (gross_margin / 100)
             operating_income = revenue * (operating_margin / 100)
             net_income = operating_income * 0.75
@@ -254,7 +250,6 @@ class ScenarioAnalyzer:
         for scenario in scenarios:
             scenario['normalized_probability'] = scenario['probability'] / total_probability
         
-        # Calculate weighted averages
         expected_revenue = sum([s['five_year_revenue'] * s['normalized_probability'] for s in scenarios])
         expected_cagr = sum([s['five_year_cagr'] * s['normalized_probability'] for s in scenarios])
         expected_valuation = sum([s['implied_enterprise_value'] * s['normalized_probability'] for s in scenarios])
@@ -277,7 +272,6 @@ class ScenarioAnalyzer:
         
         scenarios = [bull, base, bear]
         
-        # Calculate expected value
         expected_value = self.calculate_expected_value(scenarios)
         
         return expected_value
@@ -287,14 +281,14 @@ class ScenarioAnalyzer:
         Print comprehensive scenario analysis
         """
         print("\n" + "="*80)
-        print("📊 SCENARIO ANALYSIS - BULL / BASE / BEAR")
+        print(" SCENARIO ANALYSIS - BULL / BASE / BEAR")
         print("="*80)
         
         scenarios = scenario_results['scenarios']
         
         for scenario in scenarios:
             print(f"\n{'='*80}")
-            print(f"🎯 {scenario['name'].upper()}")
+            print(f" {scenario['name'].upper()}")
             print(f"{'='*80}")
             print(f"  Probability: {scenario['probability']}%")
             print(f"\n  Key Assumptions:")
@@ -318,7 +312,7 @@ class ScenarioAnalyzer:
         
         # Expected value
         print(f"\n{'='*80}")
-        print(f"🎯 PROBABILITY-WEIGHTED EXPECTED VALUE")
+        print(f" PROBABILITY-WEIGHTED EXPECTED VALUE")
         print(f"{'='*80}")
         print(f"  Expected 5-Year Revenue: ${scenario_results['expected_revenue']:,.0f}K")
         print(f"  Expected 5-Year CAGR: {scenario_results['expected_cagr']:.1f}%")

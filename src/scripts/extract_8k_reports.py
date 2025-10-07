@@ -10,7 +10,6 @@ from pathlib import Path
 from datetime import datetime
 import re
 
-# Add parent directory to path for imports
 sys.path.append(str(Path(__file__).parent))
 from utils.excel_parser import ExcelParser
 from utils.data_cleaner import DataCleaner
@@ -87,7 +86,6 @@ def extract_8k_data(excel_file: Path, metadata: dict) -> pd.DataFrame:
             # Rename first column to 'line_item'
             df.rename(columns={'col_0': 'line_item'}, inplace=True)
             
-            # Add sheet information
             df['sheet_name'] = sheet_name
             df['sheet_type'] = _categorize_sheet(sheet_name)
             
@@ -105,7 +103,6 @@ def extract_8k_data(excel_file: Path, metadata: dict) -> pd.DataFrame:
     # Combine all extracted data
     combined_df = pd.concat(all_data, ignore_index=True)
     
-    # Add metadata
     for key, value in metadata.items():
         combined_df.insert(0, key, value)
     
@@ -141,7 +138,6 @@ def process_all_8k_files(input_dir: Path, output_file: Path) -> bool:
     total_files = 0
     processed_files = 0
     
-    # Get all year directories
     year_dirs = sorted([d for d in input_dir.iterdir() if d.is_dir()], 
                       key=lambda x: x.name)
     
@@ -151,7 +147,6 @@ def process_all_8k_files(input_dir: Path, output_file: Path) -> bool:
         year = year_dir.name
         print(f"\nProcessing year: {year}")
         
-        # Get all Excel files in this year
         excel_files = sorted(list(year_dir.glob("*.xlsx")))
         total_files += len(excel_files)
         
@@ -173,7 +168,7 @@ def process_all_8k_files(input_dir: Path, output_file: Path) -> bool:
                     processed_files += 1
                     print(f"    ✓ Extracted {len(df)} rows")
                 else:
-                    print(f"    ⚠ No data extracted")
+                    print(f"     No data extracted")
                     
             except Exception as e:
                 print(f"    ✗ Error: {str(e)}")
@@ -187,7 +182,6 @@ def process_all_8k_files(input_dir: Path, output_file: Path) -> bool:
     print(f"\nCombining data from {len(all_data)} files...")
     combined_df = pd.concat(all_data, ignore_index=True)
     
-    # Save to CSV
     output_file.parent.mkdir(parents=True, exist_ok=True)
     combined_df.to_csv(output_file, index=False)
     

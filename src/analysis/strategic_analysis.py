@@ -29,7 +29,6 @@ class StrategicAnalyzer:
         profit_df = self.metrics['profitability_metrics']
         balance_df = self.metrics['balance_sheet_metrics']
         
-        # Get latest data
         latest_data = {
             'revenue': growth_df.iloc[-1]['revenue'],
             'cash': balance_df.iloc[-1]['cash'],
@@ -270,31 +269,31 @@ class StrategicAnalyzer:
             'bull_thesis': {
                 'title': 'Why GSI Could Be Attractive',
                 'points': [
-                    '💡 Strong gross margins (60%+) show product differentiation',
-                    '💡 Low cash position creates takeover attractiveness',
-                    '💡 Memory IP portfolio has strategic value',
-                    '💡 APU technology has AI/ML potential',
-                    '💡 Niche market position defensible',
-                    '💡 Current valuation extremely low (potential upside)'
+                    ' Strong gross margins (60%+) show product differentiation',
+                    ' Low cash position creates takeover attractiveness',
+                    ' Memory IP portfolio has strategic value',
+                    ' APU technology has AI/ML potential',
+                    ' Niche market position defensible',
+                    ' Current valuation extremely low (potential upside)'
                 ]
             },
             'bear_thesis': {
                 'title': 'Why GSI Is Risky',
                 'points': [
-                    '⚠️  Persistent revenue decline (-53% in 5 years)',
-                    '⚠️  Negative operating margins (-100%+ in 2025)',
-                    '⚠️  Critical cash position ($1M)',
-                    '⚠️  Small scale disadvantage vs. competitors',
-                    '⚠️  Limited R&D budget for innovation',
-                    '⚠️  Market share erosion continuing'
+                    '  Persistent revenue decline (-53% in 5 years)',
+                    '  Negative operating margins (-100%+ in 2025)',
+                    '  Critical cash position ($1M)',
+                    '  Small scale disadvantage vs. competitors',
+                    '  Limited R&D budget for innovation',
+                    '  Market share erosion continuing'
                 ]
             },
             'key_questions': [
-                '❓ Can GSI stabilize revenue in next 12 months?',
-                '❓ Will APU technology gain market traction?',
-                '❓ Can they secure financing or partnership?',
-                '❓ Is there acquisition interest from larger players?',
-                '❓ Can they achieve profitability with current run rate?'
+                ' Can GSI stabilize revenue in next 12 months?',
+                ' Will APU technology gain market traction?',
+                ' Can they secure financing or partnership?',
+                ' Is there acquisition interest from larger players?',
+                ' Can they achieve profitability with current run rate?'
             ],
             'recommendation_drivers': {
                 'for_buy': 'If you believe in turnaround potential and have HIGH risk tolerance',
@@ -311,11 +310,11 @@ class StrategicAnalyzer:
         Print comprehensive strategic analysis
         """
         print("\n" + "="*80)
-        print("🎯 STRATEGIC ANALYSIS - TIME HORIZONS & MARKET OPPORTUNITY")
+        print(" STRATEGIC ANALYSIS - TIME HORIZONS & MARKET OPPORTUNITY")
         print("="*80)
         
         # Time Horizons
-        print("\n📅 TIME HORIZON ANALYSIS:")
+        print("\n TIME HORIZON ANALYSIS:")
         for horizon_name, horizon in time_horizons.items():
             print(f"\n  {horizon['period'].upper()} ({horizon['focus']})")
             print(f"    Assessment: {horizon['assessment']}")
@@ -330,14 +329,14 @@ class StrategicAnalyzer:
             
             print(f"    Risks:")
             for risk in horizon['risks']:
-                print(f"      ⚠️  {risk}")
+                print(f"        {risk}")
             
             print(f"    Opportunities:")
             for opp in horizon['opportunities']:
-                print(f"      💡 {opp}")
+                print(f"       {opp}")
         
         # Market Opportunity
-        print(f"\n\n📊 MARKET OPPORTUNITY ANALYSIS:")
+        print(f"\n\n MARKET OPPORTUNITY ANALYSIS:")
         print(f"\n  Addressable Market:")
         print(f"    • Total Market: {market_opportunity['addressable_market']['total_market_size']}")
         print(f"    • Serviceable Market: {market_opportunity['addressable_market']['serviceable_market']}")
@@ -352,7 +351,7 @@ class StrategicAnalyzer:
         print(f"    • Innovation Focus: {market_opportunity['technology_assessment']['innovation_focus']}")
         
         # Strategic Options
-        print(f"\n\n🎯 STRATEGIC OPTIONS:")
+        print(f"\n\n STRATEGIC OPTIONS:")
         for option_key, option in strategic_options.items():
             print(f"\n  {option['name'].upper()}")
             print(f"    Probability: {option['probability']}")
@@ -361,7 +360,7 @@ class StrategicAnalyzer:
             print(f"    Value Potential: {option['value_potential']}")
         
         # Investment Thesis
-        print(f"\n\n💡 INVESTMENT THESIS:")
+        print(f"\n\n INVESTMENT THESIS:")
         
         print(f"\n  {investment_thesis['bull_thesis']['title']}:")
         for point in investment_thesis['bull_thesis']['points']:

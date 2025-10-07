@@ -10,7 +10,6 @@ from pathlib import Path
 from datetime import datetime
 import re
 
-# Add parent directory to path for imports
 sys.path.append(str(Path(__file__).parent))
 from utils.excel_parser import ExcelParser
 from utils.data_cleaner import DataCleaner
@@ -45,7 +44,6 @@ def extract_financial_table(df: pd.DataFrame,
             header_row = idx
             break
     
-    # Set header and clean
     if header_row > 0:
         df.columns = df.iloc[header_row]
         df = df.iloc[header_row + 1:].reset_index(drop=True)
@@ -80,7 +78,6 @@ def extract_financial_table(df: pd.DataFrame,
     numeric_cols = [col for col in df.columns if col != 'line_item']
     df = DataCleaner.clean_financial_values(df, value_columns=numeric_cols)
     
-    # Add metadata and type
     df.insert(0, 'statement_type', table_type)
     for key, value in reversed(list(metadata.items())):
         df.insert(0, key, value)
@@ -176,7 +173,6 @@ def process_all_quarterly_reports(input_dir: Path, output_dir: Path) -> bool:
     total_files = 0
     processed_files = 0
     
-    # Get all year directories
     year_dirs = sorted([d for d in input_dir.iterdir() if d.is_dir()],
                       key=lambda x: x.name)
     
@@ -212,7 +208,6 @@ def process_all_quarterly_reports(input_dir: Path, output_dir: Path) -> bool:
                 print(f"    ✗ Error: {str(e)}")
                 continue
     
-    # Save aggregated data
     output_dir.mkdir(parents=True, exist_ok=True)
     
     files_created = 0

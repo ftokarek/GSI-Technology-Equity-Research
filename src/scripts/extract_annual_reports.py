@@ -10,7 +10,6 @@ from pathlib import Path
 from datetime import datetime
 import re
 
-# Add parent directory to path for imports
 sys.path.append(str(Path(__file__).parent))
 from utils.excel_parser import ExcelParser
 from utils.data_cleaner import DataCleaner
@@ -48,7 +47,6 @@ def extract_financial_table(df: pd.DataFrame,
             header_row = idx
             break
     
-    # Set header and clean
     if header_row > 0:
         df.columns = df.iloc[header_row]
         df = df.iloc[header_row + 1:].reset_index(drop=True)
@@ -89,7 +87,6 @@ def extract_financial_table(df: pd.DataFrame,
     # Normalize line item names
     df = DataCleaner.normalize_item_names(df, item_column='line_item')
     
-    # Add metadata
     df.insert(0, 'sheet_name', sheet_name)
     df.insert(0, 'statement_type', table_type)
     for key, value in reversed(list(metadata.items())):
@@ -214,7 +211,6 @@ def process_all_annual_reports(input_dir: Path, output_dir: Path) -> bool:
     total_files = 0
     processed_files = 0
     
-    # Get all year directories
     year_dirs = sorted([d for d in input_dir.iterdir() if d.is_dir()],
                       key=lambda x: x.name)
     
@@ -224,7 +220,6 @@ def process_all_annual_reports(input_dir: Path, output_dir: Path) -> bool:
         year = year_dir.name
         print(f"\nProcessing year: {year}")
         
-        # Get 10-K files (not ARS - Annual Report to Shareholders)
         excel_files = [f for f in sorted(list(year_dir.glob("*.xlsx"))) 
                       if '10-K' in f.name or 'Annual report pursuant' in f.name]
         total_files += len(excel_files)
@@ -258,7 +253,6 @@ def process_all_annual_reports(input_dir: Path, output_dir: Path) -> bool:
                 traceback.print_exc()
                 continue
     
-    # Save aggregated data
     output_dir.mkdir(parents=True, exist_ok=True)
     
     files_created = 0

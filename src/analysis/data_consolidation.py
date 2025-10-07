@@ -44,7 +44,6 @@ class DataConsolidator:
         print("=" * 80)
         print()
         
-        # Load market data
         market_file = self.processed_dir / "market_data/stock_prices.csv"
         if market_file.exists():
             self.market_data = pd.read_csv(market_file)
@@ -53,7 +52,6 @@ class DataConsolidator:
         else:
             print(f"✗ Market data not found")
         
-        # Load annual reports
         print("\nLoading annual reports...")
         annual_dir = self.processed_dir / "annual_reports"
         
@@ -72,7 +70,6 @@ class DataConsolidator:
             self.annual_cashflow = pd.read_csv(cashflow_file)
             print(f"  ✓ Annual cash flows: {len(self.annual_cashflow)} rows")
         
-        # Load quarterly reports
         print("\nLoading quarterly reports...")
         quarterly_dir = self.processed_dir / "quarterly_reports"
         
@@ -164,7 +161,6 @@ class DataConsolidator:
                     if not matches.empty:
                         # Collect ALL numeric values from this row WITH column order AND sheet priority
                         for _, row in matches.iterrows():
-                            # Get column list early (needed for checks)
                             col_list = list(matches.columns)
                             
                             # SKIP rows with actual quarterly data
@@ -182,7 +178,6 @@ class DataConsolidator:
                             if has_quarterly:
                                 continue  # Skip rows with actual quarterly data
                             
-                            # Get sheet name for prioritization
                             sheet_name = str(row.get('sheet_name', '')).lower()
                             
                             # Determine sheet priority (lower = better)
@@ -231,7 +226,6 @@ class DataConsolidator:
                     # Sort by: 1) sheet priority (lower = better), 2) column index
                     all_values.sort(key=lambda x: (x[0], x[1]))
                     
-                    # Get values > 100 (likely actual dollar amounts in thousands)
                     large_values = [(priority, idx, v) for priority, idx, v in all_values if v > 100]
                     
                     if large_values:
@@ -280,7 +274,6 @@ class DataConsolidator:
             item_mappings
         )
         
-        # Calculate derived metrics
         if 'net_income' in master_income.columns and 'net_loss' in master_income.columns:
             master_income['net_income_final'] = master_income.apply(
                 lambda row: row['net_income'] if pd.notna(row['net_income']) 
@@ -288,7 +281,6 @@ class DataConsolidator:
                 axis=1
             )
         
-        # Save
         output_file = self.output_dir / "master_income_statement.csv"
         master_income.to_csv(output_file, index=False)
         print(f"  ✓ Master income statement saved: {len(master_income)} years")
@@ -383,7 +375,6 @@ class DataConsolidator:
         df = self.market_data.copy()
         df['year'] = df['date'].dt.year
         
-        # Calculate annual statistics
         annual_summary = df.groupby('year').agg({
             'open': 'first',
             'high': 'max',
@@ -392,7 +383,6 @@ class DataConsolidator:
             'volume': 'sum'
         }).reset_index()
         
-        # Calculate returns
         annual_summary['annual_return'] = annual_summary['close'].pct_change() * 100
         
         output_file = self.output_dir / "market_data_annual.csv"
@@ -409,13 +399,11 @@ class DataConsolidator:
         print("=" * 80)
         print("\n")
         
-        # Load data
         self.load_all_data()
         
         # Analyze structure
         self.analyze_data_structure()
         
-        # Create consolidated datasets
         print("=" * 80)
         print("CREATING CONSOLIDATED DATASETS")
         print("=" * 80)

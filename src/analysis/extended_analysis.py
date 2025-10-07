@@ -12,7 +12,6 @@ from typing import Dict, List, Tuple, Optional
 import warnings
 warnings.filterwarnings('ignore')
 
-# Add src to path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from analysis.financial_metrics import FinancialMetricsCalculator
@@ -37,20 +36,18 @@ class ExtendedEquityAnalysis:
         """
         Load all consolidated financial data
         """
-        print("Loading consolidated financial data...")
+        print("Loading data")
         
-        # Load main datasets
         self.income = pd.read_csv(self.data_dir / "master_income_statement.csv")
         self.balance = pd.read_csv(self.data_dir / "master_balance_sheet.csv")
         
-        # Load optional datasets
         cashflow_path = self.data_dir / "master_cashflow.csv"
         market_path = self.data_dir / "market_data_annual.csv"
         
         self.cashflow = pd.read_csv(cashflow_path) if cashflow_path.exists() else None
         self.market = pd.read_csv(market_path) if market_path.exists() else None
         
-        print(f"✅ Loaded data:")
+        print(f" Loaded data:")
         print(f"  Income Statement: {len(self.income)} years")
         print(f"  Balance Sheet: {len(self.balance)} years")
         
@@ -59,11 +56,10 @@ class ExtendedEquityAnalysis:
         Run extended comprehensive analysis
         """
         print("\n" + "="*80)
-        print("🚀 EXTENDED EQUITY ANALYSIS - GSI TECHNOLOGY")
+        print(" EXTENDED EQUITY ANALYSIS - GSI TECHNOLOGY")
         print("="*80)
         
-        # Step 1: Financial Metrics
-        print("\n📊 STEP 1: CALCULATING FINANCIAL METRICS...")
+        print("\n CALCULATING FINANCIAL METRICS...")
         calculator = FinancialMetricsCalculator(
             self.income, 
             self.balance, 
@@ -71,25 +67,21 @@ class ExtendedEquityAnalysis:
         )
         metrics = calculator.calculate_all_metrics()
         
-        # Step 2: Trend Analysis
-        print("\n📈 STEP 2: TREND ANALYSIS...")
+        print("\n TREND ANALYSIS...")
         trend_analyzer = TrendAnalyzer(metrics)
         trend_summary = trend_analyzer.generate_trend_summary()
         
-        # Step 3: Valuation Analysis
-        print("\n💰 STEP 3: VALUATION ANALYSIS...")
+        print("\n VALUATION ANALYSIS...")
         valuation_analyzer = ValuationAnalyzer(metrics, self.market)
         multiples = valuation_analyzer.calculate_multiples()
         fair_value = valuation_analyzer.calculate_fair_value_estimation()
         attractiveness = valuation_analyzer.analyze_valuation_attractiveness()
         
-        # Step 4: Scenario Analysis (NEW)
-        print("\n🎯 STEP 4: SCENARIO ANALYSIS (BULL/BASE/BEAR)...")
+        print("\n SCENARIO ANALYSIS (BULL/BASE/BEAR)...")
         scenario_analyzer = ScenarioAnalyzer(metrics)
         scenario_results = scenario_analyzer.run_scenario_analysis()
         
-        # Step 5: Strategic Analysis (NEW)
-        print("\n🎯 STEP 5: STRATEGIC ANALYSIS (TIME HORIZONS & MARKET)...")
+        print("\n STRATEGIC ANALYSIS (TIME HORIZONS & MARKET)...")
         strategic_analyzer = StrategicAnalyzer(metrics, self.income)
         time_horizons = strategic_analyzer.analyze_time_horizons()
         market_opportunity = strategic_analyzer.analyze_market_opportunity()
@@ -216,7 +208,6 @@ class ExtendedEquityAnalysis:
         
         print(f"\n💾 Saving extended analysis results...")
         
-        # Save scenario analysis
         scenarios_list = []
         for scenario in results['scenario_analysis']['scenarios']:
             scenario_summary = {
@@ -230,16 +221,14 @@ class ExtendedEquityAnalysis:
         
         scenarios_df = pd.DataFrame(scenarios_list)
         scenarios_df.to_csv(output_path / "scenario_analysis_summary.csv", index=False)
-        print(f"  ✅ Saved scenario_analysis_summary.csv")
+        print(f"   Saved scenario_analysis_summary.csv")
         
-        # Save scenario projections
         for scenario in results['scenario_analysis']['scenarios']:
             projections_df = pd.DataFrame(scenario['projections'])
             filename = f"scenario_projections_{scenario['name'].lower().replace(' ', '_').replace('-', '')}.csv"
             projections_df.to_csv(output_path / filename, index=False)
-            print(f"  ✅ Saved {filename}")
+            print(f"   Saved {filename}")
         
-        # Save strategic analysis
         time_horizons_list = []
         for horizon_name, horizon in results['strategic_analysis']['time_horizons'].items():
             time_horizons_list.append({
@@ -251,9 +240,8 @@ class ExtendedEquityAnalysis:
         
         time_horizons_df = pd.DataFrame(time_horizons_list)
         time_horizons_df.to_csv(output_path / "time_horizons_analysis.csv", index=False)
-        print(f"  ✅ Saved time_horizons_analysis.csv")
+        print(f"   Saved time_horizons_analysis.csv")
         
-        # Save final recommendation
         final_rec = self.generate_final_recommendation(results)
         final_rec_df = pd.DataFrame([{
             'recommendation': final_rec['primary_recommendation'],
@@ -264,9 +252,9 @@ class ExtendedEquityAnalysis:
             'investment_suitability': final_rec['investment_suitability']
         }])
         final_rec_df.to_csv(output_path / "final_recommendation.csv", index=False)
-        print(f"  ✅ Saved final_recommendation.csv")
+        print(f"   Saved final_recommendation.csv")
         
-        print(f"✅ All extended analysis results saved!")
+        print(f" All extended analysis results saved!")
         
         return final_rec
     
@@ -284,7 +272,7 @@ class ExtendedEquityAnalysis:
         final_rec = self.generate_final_recommendation(results)
         
         print("\n" + "="*80)
-        print("🎯 FINAL INVESTMENT RECOMMENDATION")
+        print(" Final INVESTMENT RECOMMENDATION")
         print("="*80)
         print(f"\n  Recommendation: {final_rec['primary_recommendation']}")
         print(f"  Confidence: {final_rec['confidence']}")
@@ -296,13 +284,12 @@ class ExtendedEquityAnalysis:
         
         print(f"\n  Key Catalysts:")
         for catalyst in final_rec['key_catalysts']:
-            print(f"    ✅ {catalyst}")
+            print(f"     {catalyst}")
         
         print(f"\n  Key Risks:")
         for risk in final_rec['key_risks']:
-            print(f"    ⚠️  {risk}")
+            print(f"      {risk}")
         
-        # Save results
         self.save_extended_results(results)
         
         return results
@@ -311,21 +298,20 @@ def main():
     """
     Main execution function
     """
-    print("🚀 EXTENDED EQUITY ANALYSIS - GSI TECHNOLOGY")
+    print(" EXTENDED EQUITY ANALYSIS - GSI TECHNOLOGY")
     print("="*60)
     
-    # Initialize analysis
     analysis = ExtendedEquityAnalysis()
     
     # Run full extended analysis
     results = analysis.run_full_extended_analysis()
     
     print("\n" + "="*80)
-    print("✅ EXTENDED ANALYSIS COMPLETE!")
+    print(" EXTENDED ANALYSIS Complete!")
     print("="*80)
-    print("📊 All results saved to: data/analysis/")
-    print("📈 Ready for LaTeX report generation!")
-    print("🎯 Final investment recommendation generated!")
+    print(" All results saved to: data/analysis/")
+    print(" Ready for LaTeX report generation!")
+    print(" Final investment recommendation generated!")
     
     return results
 

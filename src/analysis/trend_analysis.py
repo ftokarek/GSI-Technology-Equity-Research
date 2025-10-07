@@ -238,11 +238,11 @@ class TrendAnalyzer:
         Print comprehensive trend analysis
         """
         print("\n" + "="*80)
-        print("📈 COMPREHENSIVE TREND ANALYSIS")
+        print(" Comprehensive TREND ANALYSIS")
         print("="*80)
         
         # Revenue Trends
-        print("\n💰 REVENUE TRENDS:")
+        print("\n REVENUE TRENDS:")
         revenue_trends = trend_summary['revenue_trends']
         
         for period, data in revenue_trends.items():
@@ -257,7 +257,7 @@ class TrendAnalyzer:
                 print(f"    Peak Revenue: ${data['peak_revenue']:,.0f}K ({data['peak_year']})")
         
         # Profitability Trends
-        print("\n📊 PROFITABILITY TRENDS:")
+        print("\n PROFITABILITY TRENDS:")
         profit_trends = trend_summary['profitability_trends']
         
         for period, data in profit_trends.items():
@@ -276,7 +276,7 @@ class TrendAnalyzer:
                 print(f"    Worst Operating Margin: {data['worst_operating_margin']:.1f}% ({data['worst_operating_margin_year']})")
         
         # Balance Sheet Trends
-        print("\n💼 BALANCE SHEET TRENDS:")
+        print("\n BALANCE SHEET TRENDS:")
         balance_trends = trend_summary['balance_sheet_trends']
         
         for period, data in balance_trends.items():
@@ -297,7 +297,7 @@ class TrendAnalyzer:
                 print(f"    Peak Assets: ${data['peak_assets']:,.0f}K ({data['peak_assets_year']})")
         
         # Returns Trends
-        print("\n🎯 RETURNS TRENDS:")
+        print("\n RETURNS TRENDS:")
         returns_trends = trend_summary['returns_trends']
         
         for period, data in returns_trends.items():

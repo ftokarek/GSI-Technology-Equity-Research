@@ -10,7 +10,6 @@ from pathlib import Path
 from datetime import datetime
 import re
 
-# Add parent directory to path for imports
 sys.path.append(str(Path(__file__).parent))
 from utils.excel_parser import ExcelParser
 from utils.data_cleaner import DataCleaner
@@ -31,7 +30,6 @@ def detect_statement_type_by_content(df: pd.DataFrame, sheet_name: str) -> str:
     if df.empty or df.shape[0] < 3:
         return 'unknown'
     
-    # Get first column as text (line items)
     first_col = df.iloc[:, 0].astype(str).str.lower()
     all_text = ' '.join(first_col.tolist())
     
@@ -120,7 +118,6 @@ def extract_financial_table_v2(df: pd.DataFrame,
             header_row = idx
             break
     
-    # Set header
     if header_row > 0:
         df.columns = df.iloc[header_row]
         df = df.iloc[header_row + 1:].reset_index(drop=True)
@@ -159,11 +156,9 @@ def extract_financial_table_v2(df: pd.DataFrame,
     numeric_cols = [col for col in df.columns if col != 'line_item']
     df = DataCleaner.clean_financial_values(df, value_columns=numeric_cols)
     
-    # Add metadata
     df.insert(0, 'sheet_name', sheet_name)
     df.insert(0, 'statement_type', table_type)
     
-    # Add year only if not already present
     if 'year' not in df.columns:
         df.insert(0, 'year', year)
     
@@ -226,7 +221,6 @@ def extract_annual_report_v2(excel_file: Path) -> dict:
             if df_clean.empty:
                 continue
             
-            # Add to appropriate category
             if stmt_type == 'balance_sheet':
                 results['balance_sheets'].append(df_clean)
             elif stmt_type == 'income_statement':
@@ -267,7 +261,6 @@ def process_all_annual_reports_v2(input_dir: Path, output_dir: Path) -> bool:
     total_files = 0
     processed_files = 0
     
-    # Get all year directories
     year_dirs = sorted([d for d in input_dir.iterdir() if d.is_dir()],
                       key=lambda x: x.name)
     
@@ -277,7 +270,6 @@ def process_all_annual_reports_v2(input_dir: Path, output_dir: Path) -> bool:
         year = year_dir.name
         print(f"\nProcessing year: {year}")
         
-        # Get 10-K files (not ARS - Annual Report to Shareholders)
         excel_files = [f for f in sorted(list(year_dir.glob("*.xlsx"))) 
                       if '10-K' in f.name or 'Annual report pursuant' in f.name]
         total_files += len(excel_files)
@@ -313,7 +305,6 @@ def process_all_annual_reports_v2(input_dir: Path, output_dir: Path) -> bool:
                 traceback.print_exc()
                 continue
     
-    # Save aggregated data
     output_dir.mkdir(parents=True, exist_ok=True)
     
     files_created = 0

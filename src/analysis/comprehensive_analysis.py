@@ -12,7 +12,6 @@ from typing import Dict, List, Tuple, Optional
 import warnings
 warnings.filterwarnings('ignore')
 
-# Add src to path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from analysis.financial_metrics import FinancialMetricsCalculator
@@ -35,20 +34,18 @@ class ComprehensiveEquityAnalysis:
         """
         Load all consolidated financial data
         """
-        print("Loading consolidated financial data...")
+        print("Loading data")
         
-        # Load main datasets
         self.income = pd.read_csv(self.data_dir / "master_income_statement.csv")
         self.balance = pd.read_csv(self.data_dir / "master_balance_sheet.csv")
         
-        # Load optional datasets
         cashflow_path = self.data_dir / "master_cashflow.csv"
         market_path = self.data_dir / "market_data_annual.csv"
         
         self.cashflow = pd.read_csv(cashflow_path) if cashflow_path.exists() else None
         self.market = pd.read_csv(market_path) if market_path.exists() else None
         
-        print(f"✅ Loaded data:")
+        print(f" Loaded data:")
         print(f"  Income Statement: {len(self.income)} years")
         print(f"  Balance Sheet: {len(self.balance)} years")
         print(f"  Cash Flow: {len(self.cashflow) if self.cashflow is not None else 0} years")
@@ -59,11 +56,10 @@ class ComprehensiveEquityAnalysis:
         Run comprehensive equity analysis
         """
         print("\n" + "="*80)
-        print("🚀 COMPREHENSIVE EQUITY ANALYSIS - GSI TECHNOLOGY")
+        print(" Comprehensive EQUITY ANALYSIS - GSI TECHNOLOGY")
         print("="*80)
         
-        # Step 1: Calculate Financial Metrics
-        print("\nSTEP 1: CALCULATING FINANCIAL METRICS...")
+        print("\nCALCULATING FINANCIAL METRICS...")
         calculator = FinancialMetricsCalculator(
             self.income, 
             self.balance, 
@@ -72,16 +68,13 @@ class ComprehensiveEquityAnalysis:
         metrics = calculator.calculate_all_metrics()
         summary = calculator.get_summary_statistics(metrics)
         
-        # Step 2: Trend Analysis
-        print("\nSTEP 2: TREND ANALYSIS...")
+        print("\nTREND ANALYSIS...")
         trend_analyzer = TrendAnalyzer(metrics)
         trend_summary = trend_analyzer.generate_trend_summary()
         
-        # Step 3: Valuation Analysis
-        print("\nSTEP 3: VALUATION ANALYSIS...")
+        print("\nVALUATION ANALYSIS...")
         valuation_analyzer = ValuationAnalyzer(metrics, self.market)
         
-        # Calculate valuation components
         multiples = valuation_analyzer.calculate_multiples()
         fair_value = valuation_analyzer.calculate_fair_value_estimation()
         attractiveness = valuation_analyzer.analyze_valuation_attractiveness()
@@ -118,7 +111,6 @@ class ComprehensiveEquityAnalysis:
         print("EXECUTIVE SUMMARY - GSI TECHNOLOGY EQUITY ANALYSIS")
         print("="*80)
         
-        # Get key metrics
         metrics = results['financial_metrics']['metrics']
         trend_analysis = results['trend_analysis']
         valuation = results['valuation_analysis']
@@ -197,7 +189,7 @@ class ComprehensiveEquityAnalysis:
         print(f"  • Undervalued based on book value")
         
         # Final Recommendation
-        print(f"\n  FINAL RECOMMENDATION:")
+        print(f"\n  Final RECOMMENDATION:")
         if attractiveness['recommendation'] in ['STRONG BUY', 'BUY']:
             print(f"    {attractiveness['recommendation']} - GSI Technology presents")
             print(f"     attractive investment opportunity with strong fundamentals")
@@ -217,7 +209,6 @@ class ComprehensiveEquityAnalysis:
         
         print(f"\n  Saving comprehensive analysis results...")
         
-        # Save financial metrics (DataFrames)
         financial_metrics = results['financial_metrics']
         for metric_name, df in financial_metrics['metrics'].items():
             filename = f"financial_{metric_name}.csv"
@@ -225,7 +216,6 @@ class ComprehensiveEquityAnalysis:
             df.to_csv(filepath, index=False)
             print(f"    Saved {filename}")
         
-        # Save trend analysis (convert dicts to DataFrames)
         trend_analysis = results['trend_analysis']
         for trend_name, trend_data in trend_analysis.items():
             # Convert dict to DataFrame
@@ -235,7 +225,6 @@ class ComprehensiveEquityAnalysis:
             trend_df.to_csv(filepath, index=True)
             print(f"    Saved {filename}")
         
-        # Save valuation analysis
         valuation_analysis = results['valuation_analysis']
         
         # Current valuation
@@ -253,7 +242,6 @@ class ComprehensiveEquityAnalysis:
         attractiveness_df.to_csv(output_path / "valuation_attractiveness.csv", index=False)
         print(f"    Saved valuation_attractiveness.csv")
         
-        # Save executive summary
         summary_data = {
             'analysis_date': pd.Timestamp.now().strftime('%Y-%m-%d'),
             'company': 'GSI Technology',
@@ -281,7 +269,6 @@ class ComprehensiveEquityAnalysis:
         # Print executive summary
         self.print_executive_summary(results)
         
-        # Save results
         self.save_comprehensive_results(results)
         
         return results
@@ -290,17 +277,16 @@ def main():
     """
     Main execution function
     """
-    print("🚀 COMPREHENSIVE EQUITY ANALYSIS - GSI TECHNOLOGY")
+    print(" Comprehensive EQUITY ANALYSIS - GSI TECHNOLOGY")
     print("="*60)
     
-    # Initialize analysis
     analysis = ComprehensiveEquityAnalysis()
     
     # Run full analysis
     results = analysis.run_full_analysis()
     
     print("\n" + "="*80)
-    print("  COMPREHENSIVE ANALYSIS COMPLETE!")
+    print("  Comprehensive ANALYSIS Complete!")
     print("="*80)
     print("  Results saved to: data/analysis/")
     print("  Ready for LaTeX report generation!")

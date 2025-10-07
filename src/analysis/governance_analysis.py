@@ -68,7 +68,6 @@ class GovernanceAnalyzer:
         
         sbc_df = pd.DataFrame(sbc_data)
         
-        # Calculate trends
         if len(sbc_df) >= 5:
             recent_sbc = sbc_df.tail(5)
             sbc_trend = recent_sbc['avg_stock_based_comp'].pct_change().mean() * 100
@@ -173,13 +172,13 @@ class GovernanceAnalyzer:
         red_flags = []
         
         # Check for rapid cash decline
-        red_flags.append('⚠️  Rapid cash decline ($44M to $1M in 4 years)')
+        red_flags.append('  Rapid cash decline ($44M to $1M in 4 years)')
         
         # Check for persistent losses
-        red_flags.append('⚠️  Persistent operating losses (negative margins)')
+        red_flags.append('  Persistent operating losses (negative margins)')
         
         # Check for declining revenue
-        red_flags.append('⚠️  Declining revenue trend (-53% over 5 years)')
+        red_flags.append('  Declining revenue trend (-53% over 5 years)')
         
         return red_flags
     
@@ -189,13 +188,13 @@ class GovernanceAnalyzer:
         
         # Proxy statements filed
         if self.proxy is not None and not self.proxy.empty:
-            positives.append('✅ Regular proxy filings (good transparency)')
+            positives.append(' Regular proxy filings (good transparency)')
         
         # Public company compliance
-        positives.append('✅ SEC compliance maintained (10-K, 10-Q, 8-K)')
+        positives.append(' SEC compliance maintained (10-K, 10-Q, 8-K)')
         
         # Audit fees present
-        positives.append('✅ Independent auditor engaged')
+        positives.append(' Independent auditor engaged')
         
         return positives
     
@@ -204,11 +203,11 @@ class GovernanceAnalyzer:
         Print governance and compensation analysis
         """
         print("\n" + "="*80)
-        print("👔 GOVERNANCE & COMPENSATION ANALYSIS")
+        print(" GOVERNANCE & COMPENSATION ANALYSIS")
         print("="*80)
         
         # Stock-based compensation
-        print("\n💰 STOCK-BASED COMPENSATION:")
+        print("\n STOCK-BASED COMPENSATION:")
         if 'stock_based_compensation_data' in sbc_analysis:
             sbc_df = sbc_analysis['stock_based_compensation_data']
             recent_sbc = sbc_df.tail(5)
@@ -221,7 +220,7 @@ class GovernanceAnalyzer:
             print(f"  Dilution Risk: {sbc_analysis['shareholder_dilution_risk']}")
         
         # Executive compensation
-        print("\n👔 EXECUTIVE COMPENSATION:")
+        print("\n EXECUTIVE COMPENSATION:")
         if 'error' not in exec_comp:
             print(f"  Years Covered: {exec_comp['years_covered']}")
             print(f"  Data Available: {exec_comp['data_available']}")
@@ -231,7 +230,7 @@ class GovernanceAnalyzer:
             print(f"  {exec_comp['error']}")
         
         # Governance quality
-        print("\n🏛️  CORPORATE GOVERNANCE:")
+        print("\n  CORPORATE GOVERNANCE:")
         print("  Red Flags:")
         for flag in governance['red_flags']:
             print(f"    {flag}")

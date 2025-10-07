@@ -91,7 +91,6 @@ class QuarterlyAnalyzer:
         if q_metrics.empty:
             return {'error': 'No quarterly data available'}
         
-        # Calculate quarterly variance by year
         volatility_by_year = []
         
         for year in sorted(q_metrics['year'].unique()):
@@ -137,16 +136,16 @@ class QuarterlyAnalyzer:
         Print quarterly analysis
         """
         print("\n" + "="*80)
-        print("📅 QUARTERLY DATA ANALYSIS")
+        print(" QUARTERLY DATA ANALYSIS")
         print("="*80)
         
-        print("\n🔍 SEASONALITY ANALYSIS:")
+        print("\n SEASONALITY ANALYSIS:")
         print(f"  Seasonality Detected: {seasonality.get('seasonality_detected', False)}")
         print(f"  Quarterly Data Available: {seasonality.get('quarterly_data_available', 0)} quarters")
         print(f"  Years Covered: {seasonality.get('years_covered', [])}")
         print(f"  Note: {seasonality.get('note', '')}")
         
-        print("\n📊 QUARTERLY VOLATILITY:")
+        print("\n QUARTERLY VOLATILITY:")
         if 'error' not in volatility:
             print(f"  Average Coefficient of Variation: {volatility['avg_coefficient_of_variation']:.1f}%")
             print(f"  Interpretation: {volatility['interpretation']}")

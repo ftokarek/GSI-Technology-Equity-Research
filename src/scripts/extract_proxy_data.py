@@ -9,7 +9,6 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
-# Add parent directory to path for imports
 sys.path.append(str(Path(__file__).parent))
 from utils.excel_parser import ExcelParser
 from utils.data_cleaner import DataCleaner
@@ -31,7 +30,6 @@ def extract_proxy_data(excel_file: Path) -> pd.DataFrame:
     
     all_data = []
     
-    # Get all sheets
     sheets = parser.get_sheet_names()
     
     for sheet_name in sheets:
@@ -48,7 +46,6 @@ def extract_proxy_data(excel_file: Path) -> pd.DataFrame:
             if df.empty:
                 continue
             
-            # Add metadata
             df.insert(0, 'sheet_name', sheet_name)
             for key, value in reversed(list(metadata.items())):
                 df.insert(0, key, value)
@@ -85,7 +82,6 @@ def process_all_proxy_statements(input_dir: Path, output_file: Path) -> bool:
     total_files = 0
     processed_files = 0
     
-    # Get all year directories
     year_dirs = sorted([d for d in input_dir.iterdir() if d.is_dir()],
                       key=lambda x: x.name)
     
@@ -109,7 +105,7 @@ def process_all_proxy_statements(input_dir: Path, output_file: Path) -> bool:
                     processed_files += 1
                     print(f"    ✓ Extracted {len(df)} rows")
                 else:
-                    print(f"    ⚠ No data extracted")
+                    print(f"     No data extracted")
                     
             except Exception as e:
                 print(f"    ✗ Error: {str(e)}")
@@ -123,7 +119,6 @@ def process_all_proxy_statements(input_dir: Path, output_file: Path) -> bool:
     print(f"\nCombining data from {len(all_data)} files...")
     combined_df = pd.concat(all_data, ignore_index=True)
     
-    # Save to CSV
     output_file.parent.mkdir(parents=True, exist_ok=True)
     combined_df.to_csv(output_file, index=False)
     

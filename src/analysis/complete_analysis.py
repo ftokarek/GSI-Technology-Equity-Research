@@ -1,5 +1,5 @@
 """
-COMPLETE Equity Analysis for GSI Technology
+Complete Equity Analysis for GSI Technology
 Final comprehensive analysis combining ALL data sources and analytical components
 """
 
@@ -11,7 +11,6 @@ from typing import Dict
 import warnings
 warnings.filterwarnings('ignore')
 
-# Add src to path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from analysis.financial_metrics import FinancialMetricsCalculator
@@ -78,7 +77,7 @@ class CompleteEquityAnalysis:
     def run_complete_analysis(self) -> Dict:
         """Run complete comprehensive analysis"""
         print("\n" + "="*80)
-        print("  COMPLETE EQUITY ANALYSIS - ALL DATA SOURCES")
+        print("  Complete EQUITY ANALYSIS - ALL DATA SOURCES")
         print("="*80)
         
         results = {}
@@ -171,7 +170,6 @@ class CompleteEquityAnalysis:
         time_horizons = results['strategic_analysis']['time_horizons']
         governance = results['governance_analysis']
         
-        # Calculate expected value
         expected_value = scenario_results['expected_valuation']
         
         # Assess cash runway
@@ -241,7 +239,7 @@ class CompleteEquityAnalysis:
     def print_final_decision(self, decision: Dict):
         """Print final investment decision"""
         print("\n" + "="*80)
-        print("  FINAL INVESTMENT DECISION - ALL FACTORS CONSIDERED")
+        print("  Final INVESTMENT DECISION - ALL FACTORS CONSIDERED")
         print("="*80)
         
         print(f"\n  PRIMARY RECOMMENDATION: {decision['primary_recommendation']}")
@@ -282,7 +280,6 @@ class CompleteEquityAnalysis:
         
         print(f"\n  Saving complete analysis results...")
         
-        # Save final decision
         decision_df = pd.DataFrame([{
             'recommendation': decision['primary_recommendation'],
             'confidence': decision['confidence'],
@@ -297,7 +294,6 @@ class CompleteEquityAnalysis:
         decision_df.to_csv(output_dir / "complete_investment_decision.csv", index=False)
         print(f"    Saved complete_investment_decision.csv")
         
-        # Save all metrics
         for metric_name, df in results['financial_metrics'].items():
             df.to_csv(output_dir / f"complete_{metric_name}.csv", index=False)
             print(f"    Saved complete_{metric_name}.csv")
@@ -307,7 +303,7 @@ class CompleteEquityAnalysis:
     def run_full_pipeline(self):
         """Run complete analysis pipeline"""
         print("\n" + "="*80)
-        print("🚀 COMPLETE EQUITY ANALYSIS - GSI TECHNOLOGY")
+        print(" Complete EQUITY ANALYSIS - GSI TECHNOLOGY")
         print("Using ALL available data sources")
         print("="*80)
         
@@ -320,21 +316,20 @@ class CompleteEquityAnalysis:
         # Print final decision
         self.print_final_decision(decision)
         
-        # Save results
         self.save_complete_results(results, decision)
         
         return results, decision
 
 def main():
     """Main execution"""
-    print("🚀 COMPLETE EQUITY ANALYSIS - GSI TECHNOLOGY")
+    print(" Complete EQUITY ANALYSIS - GSI TECHNOLOGY")
     print("="*60)
     
     analysis = CompleteEquityAnalysis()
     results, decision = analysis.run_full_pipeline()
     
     print("\n" + "="*80)
-    print("  COMPLETE ANALYSIS FINISHED!")
+    print("  Complete ANALYSIS FINISHED!")
     print("="*80)
     print("  All data sources analyzed")
     print("  All results saved to: data/analysis/")

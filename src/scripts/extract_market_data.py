@@ -9,7 +9,6 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
-# Add parent directory to path for imports
 sys.path.append(str(Path(__file__).parent))
 from utils.excel_parser import ExcelParser
 from utils.data_cleaner import DataCleaner
@@ -32,7 +31,6 @@ def extract_market_data(input_file: str, output_file: str) -> bool:
         # Read the Excel file
         parser = ExcelParser(input_file)
         
-        # Get all sheets (usually just one for market data)
         sheets = parser.get_sheet_names()
         print(f"  Found {len(sheets)} sheet(s): {sheets}")
         
@@ -67,7 +65,6 @@ def extract_market_data(input_file: str, output_file: str) -> bool:
         if 'date' in df.columns:
             df = df.dropna(subset=['date'])
         
-        # Add metadata
         df.insert(0, 'ticker', 'GSIT')
         df.insert(1, 'company', 'GSI Technology Inc.')
         
@@ -75,7 +72,6 @@ def extract_market_data(input_file: str, output_file: str) -> bool:
         print(f"  Date range: {df['date'].min()} to {df['date'].max()}")
         print(f"  Columns: {list(df.columns)}")
         
-        # Save to CSV
         output_path = Path(output_file)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         df.to_csv(output_file, index=False)

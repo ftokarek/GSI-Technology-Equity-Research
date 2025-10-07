@@ -12,7 +12,6 @@ from typing import Dict, List, Tuple
 import warnings
 warnings.filterwarnings('ignore')
 
-# Add src to path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from analysis.financial_metrics import FinancialMetricsCalculator
@@ -33,20 +32,18 @@ class GSIEquityAnalysis:
         """
         Load all consolidated financial data
         """
-        print("Loading consolidated financial data...")
+        print("Loading data")
         
-        # Load main datasets
         self.income = pd.read_csv(self.data_dir / "master_income_statement.csv")
         self.balance = pd.read_csv(self.data_dir / "master_balance_sheet.csv")
         
-        # Load optional datasets
         cashflow_path = self.data_dir / "master_cashflow.csv"
         market_path = self.data_dir / "market_data_annual.csv"
         
         self.cashflow = pd.read_csv(cashflow_path) if cashflow_path.exists() else None
         self.market = pd.read_csv(market_path) if market_path.exists() else None
         
-        print(f"✅ Loaded data:")
+        print(f" Loaded data:")
         print(f"  Income Statement: {len(self.income)} years")
         print(f"  Balance Sheet: {len(self.balance)} years")
         print(f"  Cash Flow: {len(self.cashflow) if self.cashflow is not None else 0} years")
@@ -57,25 +54,21 @@ class GSIEquityAnalysis:
         Run comprehensive financial analysis
         """
         print("\n" + "="*80)
-        print("🚀 STARTING COMPREHENSIVE FINANCIAL ANALYSIS")
+        print(" STARTING Comprehensive FINANCIAL ANALYSIS")
         print("="*80)
         
-        # Initialize metrics calculator
         calculator = FinancialMetricsCalculator(
             self.income, 
             self.balance, 
             self.market
         )
         
-        # Calculate all metrics
-        print("\n📊 Calculating financial metrics...")
+        print("\n Calculating metrics")
         metrics = calculator.calculate_all_metrics()
         
-        # Calculate summary statistics
-        print("📈 Calculating summary statistics...")
+        print(" Calculating summary statistics...")
         summary = calculator.get_summary_statistics(metrics)
         
-        # Create analysis results
         analysis_results = {
             'metrics': metrics,
             'summary': summary,
@@ -94,14 +87,14 @@ class GSIEquityAnalysis:
         Print comprehensive analysis summary
         """
         print("\n" + "="*80)
-        print("📊 FINANCIAL ANALYSIS SUMMARY")
+        print(" FINANCIAL ANALYSIS SUMMARY")
         print("="*80)
         
         metrics = analysis_results['metrics']
         summary = analysis_results['summary']
         
         # Revenue Analysis
-        print("\n💰 REVENUE ANALYSIS:")
+        print("\n REVENUE ANALYSIS:")
         growth_df = metrics['growth_metrics']
         recent_growth = growth_df[growth_df['year'] >= 2020]
         
@@ -116,7 +109,7 @@ class GSIEquityAnalysis:
                     print(f"    {year}: ${revenue:>8,.0f}K{growth_str}")
         
         # Profitability Analysis
-        print("\n📈 PROFITABILITY ANALYSIS:")
+        print("\n PROFITABILITY ANALYSIS:")
         profit_df = metrics['profitability_metrics']
         recent_profit = profit_df[profit_df['year'] >= 2020]
         
@@ -139,7 +132,7 @@ class GSIEquityAnalysis:
                         print(f"           Net Margin: {net_margin:>6.1f}%")
         
         # Balance Sheet Analysis
-        print("\n💼 BALANCE SHEET ANALYSIS:")
+        print("\n BALANCE SHEET ANALYSIS:")
         balance_df = metrics['balance_sheet_metrics']
         recent_balance = balance_df[balance_df['year'] >= 2020]
         
@@ -163,7 +156,7 @@ class GSIEquityAnalysis:
                     print()
         
         # Returns Analysis
-        print("\n🎯 RETURNS ANALYSIS:")
+        print("\n RETURNS ANALYSIS:")
         returns_df = metrics['returns_metrics']
         recent_returns = returns_df[returns_df['year'] >= 2020]
         
@@ -186,7 +179,7 @@ class GSIEquityAnalysis:
                     print()
         
         # Summary Statistics
-        print("\n📊 SUMMARY STATISTICS:")
+        print("\n SUMMARY STATISTICS:")
         if 'growth_metrics' in summary:
             growth_stats = summary['growth_metrics']
             if 'revenue_cagr_3y_3y_avg' in growth_stats:
@@ -217,19 +210,17 @@ class GSIEquityAnalysis:
         
         print(f"\n💾 Saving analysis results to {output_path}...")
         
-        # Save individual metric files
         for metric_name, df in analysis_results['metrics'].items():
             filename = f"{metric_name}.csv"
             filepath = output_path / filename
             df.to_csv(filepath, index=False)
-            print(f"  ✅ Saved {filename}")
+            print(f"   Saved {filename}")
         
-        # Save summary statistics
         summary_df = pd.DataFrame(analysis_results['summary'])
         summary_df.to_csv(output_path / "summary_statistics.csv", index=True)
-        print(f"  ✅ Saved summary_statistics.csv")
+        print(f"   Saved summary_statistics.csv")
         
-        print(f"✅ All analysis results saved!")
+        print(f" All analysis results saved!")
     
     def run_full_analysis(self):
         """
@@ -241,7 +232,6 @@ class GSIEquityAnalysis:
         # Print summary
         self.print_analysis_summary(results)
         
-        # Save results
         self.save_analysis_results(results)
         
         return results
@@ -250,20 +240,19 @@ def main():
     """
     Main execution function
     """
-    print("🚀 GSI Technology Equity Analysis")
+    print(" GSI Technology Equity Analysis")
     print("="*50)
     
-    # Initialize analysis
     analysis = GSIEquityAnalysis()
     
     # Run full analysis
     results = analysis.run_full_analysis()
     
     print("\n" + "="*80)
-    print("✅ ANALYSIS COMPLETE!")
+    print(" ANALYSIS Complete!")
     print("="*80)
-    print("📊 Results saved to: data/analysis/")
-    print("📈 Ready for LaTeX report generation!")
+    print(" Results saved to: data/analysis/")
+    print(" Ready for LaTeX report generation!")
     
     return results
 
