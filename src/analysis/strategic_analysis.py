@@ -1,7 +1,3 @@
-"""
-Strategic & Market Analysis Module for GSI Technology
-Analysis of market position, competitive landscape, and strategic opportunities
-"""
 
 import pandas as pd
 import numpy as np
@@ -10,21 +6,12 @@ import warnings
 warnings.filterwarnings('ignore')
 
 class StrategicAnalyzer:
-    """
-    Strategic analysis for GSI Technology
-    """
     
     def __init__(self, metrics_data: Dict[str, pd.DataFrame], income_df: pd.DataFrame):
-        """
-        Initialize with financial metrics
-        """
         self.metrics = metrics_data
         self.income = income_df
         
     def analyze_time_horizons(self) -> Dict:
-        """
-        Analyze investment potential across different time horizons
-        """
         growth_df = self.metrics['growth_metrics']
         profit_df = self.metrics['profitability_metrics']
         balance_df = self.metrics['balance_sheet_metrics']
@@ -38,7 +25,6 @@ class StrategicAnalyzer:
         
         horizons = {}
         
-        # SHORT-TERM (1-2 years): Survival & Cash Runway
         monthly_burn_rate = latest_data['cash'] / 12  # Approximation
         cash_runway_months = latest_data['cash'] / monthly_burn_rate if monthly_burn_rate > 0 else np.inf
         
@@ -64,7 +50,6 @@ class StrategicAnalyzer:
             ]
         }
         
-        # MEDIUM-TERM (3-5 years): Recovery Potential
         horizons['medium_term'] = {
             'period': '3-5 Years',
             'focus': 'Revenue Recovery & Profitability',
@@ -86,7 +71,6 @@ class StrategicAnalyzer:
             ]
         }
         
-        # LONG-TERM (5+ years): Strategic Value
         horizons['long_term'] = {
             'period': '5+ Years',
             'focus': 'Strategic Value & Technology',
@@ -111,7 +95,6 @@ class StrategicAnalyzer:
         return horizons
     
     def _assess_short_term(self, latest_data: Dict, cash_runway: float) -> str:
-        """Assess short-term viability"""
         if cash_runway < 6:
             return 'CRITICAL - Immediate cash concerns'
         elif cash_runway < 12:
@@ -122,7 +105,6 @@ class StrategicAnalyzer:
             return 'STABLE - Adequate liquidity'
     
     def _assess_medium_term(self, latest_data: Dict) -> str:
-        """Assess medium-term recovery potential"""
         if latest_data['operating_margin'] < -50:
             return 'LOW - Significant operational challenges'
         elif latest_data['operating_margin'] < -20:
@@ -133,7 +115,6 @@ class StrategicAnalyzer:
             return 'EXCELLENT - Already profitable'
     
     def _assess_long_term(self, latest_data: Dict) -> str:
-        """Assess long-term strategic value"""
         if latest_data['revenue'] > 50000:
             return 'HIGH - Strong market presence'
         elif latest_data['revenue'] > 20000:
@@ -142,10 +123,6 @@ class StrategicAnalyzer:
             return 'LOW - Limited scale'
     
     def analyze_market_opportunity(self) -> Dict:
-        """
-        Analyze market opportunity and competitive position
-        """
-        # Based on GSI's memory solutions business
         market_analysis = {
             'addressable_market': {
                 'total_market_size': 'Memory IC Market: ~$120B (2024)',
@@ -194,9 +171,6 @@ class StrategicAnalyzer:
         return market_analysis
     
     def analyze_strategic_options(self) -> Dict:
-        """
-        Analyze strategic options for GSI Technology
-        """
         balance_df = self.metrics['balance_sheet_metrics']
         latest_cash = balance_df.iloc[-1]['cash']
         latest_assets = balance_df.iloc[-1]['total_assets']
@@ -262,9 +236,6 @@ class StrategicAnalyzer:
         return options
     
     def analyze_investment_thesis(self) -> Dict:
-        """
-        Comprehensive investment thesis analysis
-        """
         thesis = {
             'bull_thesis': {
                 'title': 'Why GSI Could Be Attractive',
@@ -306,14 +277,10 @@ class StrategicAnalyzer:
     
     def print_strategic_analysis(self, time_horizons: Dict, market_opportunity: Dict, 
                                  strategic_options: Dict, investment_thesis: Dict):
-        """
-        Print comprehensive strategic analysis
-        """
         print("\n" + "="*80)
         print(" STRATEGIC ANALYSIS - TIME HORIZONS & MARKET OPPORTUNITY")
         print("="*80)
         
-        # Time Horizons
         print("\n TIME HORIZON ANALYSIS:")
         for horizon_name, horizon in time_horizons.items():
             print(f"\n  {horizon['period'].upper()} ({horizon['focus']})")
@@ -335,7 +302,6 @@ class StrategicAnalyzer:
             for opp in horizon['opportunities']:
                 print(f"       {opp}")
         
-        # Market Opportunity
         print(f"\n\n MARKET OPPORTUNITY ANALYSIS:")
         print(f"\n  Addressable Market:")
         print(f"    • Total Market: {market_opportunity['addressable_market']['total_market_size']}")
@@ -350,7 +316,6 @@ class StrategicAnalyzer:
         print(f"    • Core Technology: {market_opportunity['technology_assessment']['core_technology']}")
         print(f"    • Innovation Focus: {market_opportunity['technology_assessment']['innovation_focus']}")
         
-        # Strategic Options
         print(f"\n\n STRATEGIC OPTIONS:")
         for option_key, option in strategic_options.items():
             print(f"\n  {option['name'].upper()}")
@@ -359,7 +324,6 @@ class StrategicAnalyzer:
             print(f"    Outcome: {option['potential_outcome']}")
             print(f"    Value Potential: {option['value_potential']}")
         
-        # Investment Thesis
         print(f"\n\n INVESTMENT THESIS:")
         
         print(f"\n  {investment_thesis['bull_thesis']['title']}:")

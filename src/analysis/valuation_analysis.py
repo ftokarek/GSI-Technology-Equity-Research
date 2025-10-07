@@ -1,7 +1,3 @@
-"""
-Valuation Analysis Module for GSI Technology
-Comprehensive valuation analysis including DCF, multiples, and fair value estimation
-"""
 
 import pandas as pd
 import numpy as np
@@ -10,22 +6,13 @@ import warnings
 warnings.filterwarnings('ignore')
 
 class ValuationAnalyzer:
-    """
-    Comprehensive valuation analysis for GSI Technology
-    """
     
     def __init__(self, metrics_data: Dict[str, pd.DataFrame], 
                  market_data: Optional[pd.DataFrame] = None):
-        """
-        Initialize with financial metrics and market data
-        """
         self.metrics = metrics_data
         self.market = market_data
         
     def calculate_multiples(self) -> Dict:
-        """
-        Calculate valuation multiples (P/E, P/BV, EV/EBITDA, EV/Sales)
-        """
         multiples = {}
         
         income_df = self.metrics['profitability_metrics']
@@ -45,10 +32,8 @@ class ValuationAnalyzer:
         else:
             current_price = np.nan
         
-        # Note: We don't have shares outstanding, so we'll use book value as proxy
         market_cap = np.nan
         if pd.notna(current_price):
-            # This is a placeholder - in real analysis we'd need shares outstanding
             market_cap = current_price * 1000  # Placeholder calculation
         
         revenue = latest_income.get('revenue', np.nan)
@@ -57,25 +42,21 @@ class ValuationAnalyzer:
         total_assets = latest_balance.get('total_assets', np.nan)
         stockholders_equity = latest_balance.get('stockholders_equity', np.nan)
         
-        # P/E Ratio
         if pd.notna(net_income) and net_income > 0 and pd.notna(market_cap):
             pe_ratio = market_cap / (net_income * 1000)  # Convert to millions
         else:
             pe_ratio = np.nan
         
-        # P/BV Ratio
         if pd.notna(stockholders_equity) and stockholders_equity > 0 and pd.notna(market_cap):
             pbv_ratio = market_cap / (stockholders_equity * 1000)  # Convert to millions
         else:
             pbv_ratio = np.nan
         
-        # EV/EBITDA (approximation)
         if pd.notna(ebitda) and ebitda > 0 and pd.notna(market_cap):
             ev_ebitda = market_cap / (ebitda * 1000)  # Convert to millions
         else:
             ev_ebitda = np.nan
         
-        # EV/Sales
         if pd.notna(revenue) and revenue > 0 and pd.notna(market_cap):
             ev_sales = market_cap / (revenue * 1000)  # Convert to millions
         else:
@@ -101,9 +82,6 @@ class ValuationAnalyzer:
                                terminal_growth_rate: float = 2.0,
                                discount_rate: float = 10.0,
                                projection_years: int = 5) -> Dict:
-        """
-        Calculate DCF valuation (simplified version)
-        """
         income_df = self.metrics['profitability_metrics']
         recent_data = income_df[income_df['year'] >= 2020].copy()
         
@@ -118,22 +96,17 @@ class ValuationAnalyzer:
         latest_revenue = recent_data[recent_data['year'] == latest_year]['revenue'].iloc[0]
         latest_ebitda = recent_data[recent_data['year'] == latest_year]['ebitda'].iloc[0]
         
-        # Project future cash flows
         projections = []
         current_revenue = latest_revenue
         current_ebitda = latest_ebitda
         
         for year in range(1, projection_years + 1):
-            # Project revenue (using historical growth rate)
             projected_revenue = current_revenue * (1 + avg_revenue_growth/100)
             
-            # Project EBITDA (using historical margin)
             projected_ebitda = projected_revenue * (avg_ebitda_margin/100)
             
-            # Project free cash flow (simplified: EBITDA * 0.8)
             projected_fcf = projected_ebitda * 0.8
             
-            # Discount to present value
             pv_fcf = projected_fcf / ((1 + discount_rate/100) ** year)
             
             projections.append({
@@ -154,7 +127,6 @@ class ValuationAnalyzer:
         pv_cash_flows = sum([p['pv_fcf'] for p in projections])
         enterprise_value = pv_cash_flows + pv_terminal_value
         
-        # Convert to millions
         enterprise_value_millions = enterprise_value / 1000
         
         dcf_results = {
@@ -174,15 +146,10 @@ class ValuationAnalyzer:
         return dcf_results
     
     def calculate_fair_value_estimation(self) -> Dict:
-        """
-        Calculate fair value using multiple methods
-        """
         fair_value = {}
         
-        # Method 1: P/E Multiple (if available)
         multiples = self.calculate_multiples()
         if pd.notna(multiples['pe_ratio']) and pd.notna(multiples['net_income']):
-            # Use industry average P/E (placeholder: 15x)
             industry_pe = 15.0
             fair_value_pe = (multiples['net_income'] * 1000) * industry_pe / 1000  # Convert to millions
             fair_value['pe_method'] = {
@@ -192,9 +159,7 @@ class ValuationAnalyzer:
                 'confidence': 'medium'
             }
         
-        # Method 2: P/BV Multiple (if available)
         if pd.notna(multiples['pbv_ratio']) and pd.notna(multiples['stockholders_equity']):
-            # Use industry average P/BV (placeholder: 1.5x)
             industry_pbv = 1.5
             fair_value_pbv = (multiples['stockholders_equity'] * 1000) * industry_pbv / 1000  # Convert to millions
             fair_value['pbv_method'] = {
@@ -204,7 +169,6 @@ class ValuationAnalyzer:
                 'confidence': 'medium'
             }
         
-        # Method 3: DCF Analysis
         dcf_results = self.calculate_dcf_valuation()
         if 'error' not in dcf_results:
             fair_value['dcf_method'] = {
@@ -214,9 +178,7 @@ class ValuationAnalyzer:
                 'details': dcf_results
             }
         
-        # Method 4: Revenue Multiple (if available)
         if pd.notna(multiples['revenue']):
-            # Use industry average EV/Sales (placeholder: 2.0x)
             industry_ev_sales = 2.0
             fair_value_revenue = (multiples['revenue'] * 1000) * industry_ev_sales / 1000  # Convert to millions
             fair_value['revenue_method'] = {
@@ -235,9 +197,6 @@ class ValuationAnalyzer:
         return fair_value
     
     def analyze_valuation_attractiveness(self) -> Dict:
-        """
-        Analyze valuation attractiveness and investment recommendation
-        """
         multiples = self.calculate_multiples()
         fair_value = self.calculate_fair_value_estimation()
         
@@ -249,7 +208,6 @@ class ValuationAnalyzer:
         score = 0
         factors = []
         
-        # P/E Analysis
         if pd.notna(multiples['pe_ratio']):
             if multiples['pe_ratio'] < 10:
                 score += 2
@@ -261,7 +219,6 @@ class ValuationAnalyzer:
                 score -= 1
                 factors.append('High P/E ratio')
         
-        # P/BV Analysis
         if pd.notna(multiples['pbv_ratio']):
             if multiples['pbv_ratio'] < 1.0:
                 score += 2
@@ -273,7 +230,6 @@ class ValuationAnalyzer:
                 score -= 1
                 factors.append('High P/BV ratio')
         
-        # Revenue Growth Analysis
         growth_df = self.metrics['growth_metrics']
         recent_growth = growth_df[growth_df['year'] >= 2020]['revenue_growth_yoy'].mean()
         if pd.notna(recent_growth):
@@ -287,7 +243,6 @@ class ValuationAnalyzer:
                 score -= 2
                 factors.append('Negative revenue growth')
         
-        # Profitability Analysis
         profit_df = self.metrics['profitability_metrics']
         recent_operating_margin = profit_df[profit_df['year'] >= 2020]['operating_margin'].mean()
         if pd.notna(recent_operating_margin):
@@ -301,7 +256,6 @@ class ValuationAnalyzer:
                 score -= 2
                 factors.append('Negative operating margins')
         
-        # Financial Health Analysis
         balance_df = self.metrics['balance_sheet_metrics']
         recent_cash = balance_df[balance_df['year'] >= 2020]['cash'].mean()
         recent_current_ratio = balance_df[balance_df['year'] >= 2020]['current_ratio'].mean()
@@ -320,7 +274,6 @@ class ValuationAnalyzer:
             score -= 2
             factors.append('Weak liquidity')
         
-        # Determine recommendation
         if score >= 4:
             recommendation = 'STRONG BUY'
             confidence = 'High'
@@ -345,14 +298,10 @@ class ValuationAnalyzer:
         return attractiveness
     
     def print_valuation_analysis(self, valuation_results: Dict):
-        """
-        Print comprehensive valuation analysis
-        """
         print("\n" + "="*80)
         print(" VALUATION ANALYSIS")
         print("="*80)
         
-        # Current Multiples
         multiples = valuation_results['current_valuation']
         print(f"\n CURRENT VALUATION MULTIPLES:")
         print(f"  Year: {multiples['year']}")
@@ -367,7 +316,6 @@ class ValuationAnalyzer:
         if pd.notna(multiples['ev_sales']):
             print(f"  EV/Sales: {multiples['ev_sales']:.2f}")
         
-        # Fair Value Estimation
         fair_value = valuation_results['fair_value_estimation']
         print(f"\n FAIR VALUE ESTIMATION:")
         for method, data in fair_value.items():
@@ -379,7 +327,6 @@ class ValuationAnalyzer:
             print(f"  Median Fair Value: ${fair_value['median']:.2f}M")
             print(f"  Standard Deviation: ${fair_value['std']:.2f}M")
         
-        # Investment Recommendation
         attractiveness = valuation_results['attractiveness']
         print(f"\n INVESTMENT RECOMMENDATION:")
         print(f"  Recommendation: {attractiveness['recommendation']}")
@@ -389,7 +336,6 @@ class ValuationAnalyzer:
         for factor in attractiveness['factors']:
             print(f"    • {factor}")
         
-        # DCF Details (if available)
         if 'dcf_method' in fair_value:
             dcf_details = fair_value['dcf_method']['details']
             print(f"\n DCF ANALYSIS DETAILS:")

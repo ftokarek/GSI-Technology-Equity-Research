@@ -1,7 +1,3 @@
-"""
-Extended Equity Analysis for GSI Technology
-Comprehensive analysis including scenarios, strategic analysis, and time horizons
-"""
 
 import pandas as pd
 import numpy as np
@@ -21,21 +17,12 @@ from analysis.scenario_analysis import ScenarioAnalyzer
 from analysis.strategic_analysis import StrategicAnalyzer
 
 class ExtendedEquityAnalysis:
-    """
-    Extended comprehensive equity analysis for investment decision making
-    """
     
     def __init__(self, data_dir: str = "data/consolidated"):
-        """
-        Initialize extended analysis
-        """
         self.data_dir = Path(data_dir)
         self.load_data()
         
     def load_data(self):
-        """
-        Load all consolidated financial data
-        """
         print("Loading data")
         
         self.income = pd.read_csv(self.data_dir / "master_income_statement.csv")
@@ -52,9 +39,6 @@ class ExtendedEquityAnalysis:
         print(f"  Balance Sheet: {len(self.balance)} years")
         
     def run_extended_analysis(self) -> Dict:
-        """
-        Run extended comprehensive analysis
-        """
         print("\n" + "="*80)
         print(" EXTENDED EQUITY ANALYSIS - GSI TECHNOLOGY")
         print("="*80)
@@ -88,7 +72,6 @@ class ExtendedEquityAnalysis:
         strategic_options = strategic_analyzer.analyze_strategic_options()
         investment_thesis = strategic_analyzer.analyze_investment_thesis()
         
-        # Combine all results
         extended_results = {
             'financial_metrics': metrics,
             'trend_analysis': trend_summary,
@@ -109,14 +92,9 @@ class ExtendedEquityAnalysis:
         return extended_results
     
     def print_extended_summary(self, results: Dict):
-        """
-        Print extended analysis summary
-        """
-        # Print scenario analysis
         scenario_analyzer = ScenarioAnalyzer(results['financial_metrics'])
         scenario_analyzer.print_scenario_analysis(results['scenario_analysis'])
         
-        # Print strategic analysis
         strategic_analyzer = StrategicAnalyzer(results['financial_metrics'], self.income)
         strategic_analyzer.print_strategic_analysis(
             results['strategic_analysis']['time_horizons'],
@@ -126,24 +104,18 @@ class ExtendedEquityAnalysis:
         )
     
     def generate_final_recommendation(self, results: Dict) -> Dict:
-        """
-        Generate final investment recommendation based on all analyses
-        """
         attractiveness = results['valuation_analysis']['attractiveness']
         scenario_results = results['scenario_analysis']
         time_horizons = results['strategic_analysis']['time_horizons']
         
-        # Analyze across time horizons
         short_term_viable = 'CRITICAL' not in time_horizons['short_term']['assessment']
         medium_term_potential = 'LOW' not in time_horizons['medium_term']['assessment']
         long_term_strategic = 'HIGH' in time_horizons['long_term']['assessment']
         
-        # Scenario-based recommendation
         expected_cagr = scenario_results['expected_cagr']
         bull_case_value = scenario_results['scenarios'][0]['implied_enterprise_value']
         bear_case_value = scenario_results['scenarios'][2]['implied_enterprise_value']
         
-        # Risk/Reward analysis
         upside_potential = (bull_case_value - bear_case_value) / bear_case_value * 100
         
         recommendation = {
@@ -185,9 +157,6 @@ class ExtendedEquityAnalysis:
     
     def _determine_suitability(self, score: int, short_term_viable: bool, 
                                expected_cagr: float, upside: float) -> str:
-        """
-        Determine investment suitability
-        """
         if score >= 2 and short_term_viable and expected_cagr > 5:
             return 'Suitable for GROWTH-oriented investors with HIGH risk tolerance'
         elif score >= 0 and short_term_viable:
@@ -200,9 +169,6 @@ class ExtendedEquityAnalysis:
             return 'Suitable only for DEEP VALUE investors betting on liquidation value'
     
     def save_extended_results(self, results: Dict, output_dir: str = "data/analysis"):
-        """
-        Save extended analysis results
-        """
         output_path = Path(output_dir)
         output_path.mkdir(exist_ok=True)
         
@@ -259,16 +225,10 @@ class ExtendedEquityAnalysis:
         return final_rec
     
     def run_full_extended_analysis(self):
-        """
-        Run complete extended analysis pipeline
-        """
-        # Run analysis
         results = self.run_extended_analysis()
         
-        # Print extended summary
         self.print_extended_summary(results)
         
-        # Generate and print final recommendation
         final_rec = self.generate_final_recommendation(results)
         
         print("\n" + "="*80)
@@ -295,15 +255,11 @@ class ExtendedEquityAnalysis:
         return results
 
 def main():
-    """
-    Main execution function
-    """
     print(" EXTENDED EQUITY ANALYSIS - GSI TECHNOLOGY")
     print("="*60)
     
     analysis = ExtendedEquityAnalysis()
     
-    # Run full extended analysis
     results = analysis.run_full_extended_analysis()
     
     print("\n" + "="*80)

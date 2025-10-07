@@ -1,7 +1,3 @@
-"""
-Complete Equity Analysis for GSI Technology
-Final comprehensive analysis combining ALL data sources and analytical components
-"""
 
 import pandas as pd
 import numpy as np
@@ -22,48 +18,38 @@ from analysis.governance_analysis import GovernanceAnalyzer
 from analysis.quarterly_analysis import QuarterlyAnalyzer
 
 class CompleteEquityAnalysis:
-    """
-    Complete comprehensive equity analysis using ALL available data sources
-    """
     
     def __init__(self):
-        """Initialize complete analysis"""
         self.load_all_data()
         
     def load_all_data(self):
-        """Load ALL available data sources"""
         print("=" * 80)
         print("  LOADING ALL DATA SOURCES")
         print("=" * 80)
         
-        # Consolidated data
         print("\n1. Consolidated Financial Data:")
         self.income = pd.read_csv("data/consolidated/master_income_statement.csv")
         self.balance = pd.read_csv("data/consolidated/master_balance_sheet.csv")
         print(f"    Income: {len(self.income)} years")
         print(f"    Balance: {len(self.balance)} years")
         
-        # Quarterly data
         print("\n2. Quarterly Reports:")
         self.q_income = pd.read_csv("data/processed/quarterly_reports/income_statements.csv")
         self.q_balance = pd.read_csv("data/processed/quarterly_reports/balance_sheets.csv")
         print(f"    Quarterly Income: {len(self.q_income)} rows")
         print(f"    Quarterly Balance: {len(self.q_balance)} rows")
         
-        # Compensation & Governance
         print("\n3. Governance Data:")
         self.compensation = pd.read_csv("data/processed/annual_reports/compensation_data.csv")
         self.proxy = pd.read_csv("data/processed/proxy_statements/proxy_data.csv")
         print(f"    Compensation: {len(self.compensation)} rows")
         print(f"    Proxy Statements: {len(self.proxy)} rows")
         
-        # Market data
         print("\n4. Market Data:")
         self.market_daily = pd.read_csv("data/processed/market_data/stock_prices.csv")
         self.market_daily['date'] = pd.to_datetime(self.market_daily['date'])
         print(f"    Stock Prices: {len(self.market_daily)} days")
         
-        # Cash flow (if available)
         cashflow_path = Path("data/consolidated/master_cashflow.csv")
         if cashflow_path.exists():
             self.cashflow = pd.read_csv(cashflow_path)
@@ -75,27 +61,23 @@ class CompleteEquityAnalysis:
         print("\n" + "=" * 80)
         
     def run_complete_analysis(self) -> Dict:
-        """Run complete comprehensive analysis"""
         print("\n" + "="*80)
         print("  Complete EQUITY ANALYSIS - ALL DATA SOURCES")
         print("="*80)
         
         results = {}
         
-        # 1. Financial Metrics
         print("\n  1. CALCULATING FINANCIAL METRICS...")
         calculator = FinancialMetricsCalculator(self.income, self.balance, None)
         metrics = calculator.calculate_all_metrics()
         results['financial_metrics'] = metrics
         
-        # 2. Trend Analysis
         print("  2. TREND ANALYSIS...")
         trend_analyzer = TrendAnalyzer(metrics)
         trend_summary = trend_analyzer.generate_trend_summary()
         trend_analyzer.print_trend_analysis(trend_summary)
         results['trend_analysis'] = trend_summary
         
-        # 3. Valuation Analysis
         print("\n  3. VALUATION ANALYSIS...")
         valuation_analyzer = ValuationAnalyzer(metrics, None)
         multiples = valuation_analyzer.calculate_multiples()
@@ -112,14 +94,12 @@ class CompleteEquityAnalysis:
             'attractiveness': attractiveness
         }
         
-        # 4. Scenario Analysis
         print("\n  4. SCENARIO ANALYSIS...")
         scenario_analyzer = ScenarioAnalyzer(metrics)
         scenario_results = scenario_analyzer.run_scenario_analysis()
         scenario_analyzer.print_scenario_analysis(scenario_results)
         results['scenario_analysis'] = scenario_results
         
-        # 5. Strategic Analysis
         print("\n  5. STRATEGIC ANALYSIS...")
         strategic_analyzer = StrategicAnalyzer(metrics, self.income)
         time_horizons = strategic_analyzer.analyze_time_horizons()
@@ -136,7 +116,6 @@ class CompleteEquityAnalysis:
             'investment_thesis': investment_thesis
         }
         
-        # 6. Governance & Compensation Analysis (NEW)
         print("\n  6. GOVERNANCE & COMPENSATION ANALYSIS...")
         governance_analyzer = GovernanceAnalyzer(self.compensation, self.proxy, self.income)
         sbc_analysis = governance_analyzer.analyze_stock_based_compensation()
@@ -149,7 +128,6 @@ class CompleteEquityAnalysis:
             'governance_quality': governance
         }
         
-        # 7. Quarterly Analysis (NEW)
         print("\n  7. QUARTERLY ANALYSIS...")
         quarterly_analyzer = QuarterlyAnalyzer(self.q_income, self.q_balance)
         seasonality = quarterly_analyzer.analyze_seasonality()
@@ -163,7 +141,6 @@ class CompleteEquityAnalysis:
         return results
     
     def generate_investment_decision(self, results: Dict) -> Dict:
-        """Generate final investment decision with all considerations"""
         
         attractiveness = results['valuation_analysis']['attractiveness']
         scenario_results = results['scenario_analysis']
@@ -172,10 +149,8 @@ class CompleteEquityAnalysis:
         
         expected_value = scenario_results['expected_valuation']
         
-        # Assess cash runway
         cash_runway = time_horizons['short_term']['key_metrics']['cash_runway_months']
         
-        # Final decision
         decision = {
             'primary_recommendation': attractiveness['recommendation'],
             'confidence': attractiveness['confidence'],
@@ -237,7 +212,6 @@ class CompleteEquityAnalysis:
         return decision
     
     def print_final_decision(self, decision: Dict):
-        """Print final investment decision"""
         print("\n" + "="*80)
         print("  Final INVESTMENT DECISION - ALL FACTORS CONSIDERED")
         print("="*80)
@@ -274,7 +248,6 @@ class CompleteEquityAnalysis:
             print(f"  {action}")
     
     def save_complete_results(self, results: Dict, decision: Dict):
-        """Save all results"""
         output_dir = Path("data/analysis")
         output_dir.mkdir(exist_ok=True)
         
@@ -301,19 +274,15 @@ class CompleteEquityAnalysis:
         print(f"  Complete analysis results saved!")
     
     def run_full_pipeline(self):
-        """Run complete analysis pipeline"""
         print("\n" + "="*80)
         print(" Complete EQUITY ANALYSIS - GSI TECHNOLOGY")
         print("Using ALL available data sources")
         print("="*80)
         
-        # Run analysis
         results = self.run_complete_analysis()
         
-        # Generate final decision
         decision = self.generate_investment_decision(results)
         
-        # Print final decision
         self.print_final_decision(decision)
         
         self.save_complete_results(results, decision)
@@ -321,7 +290,6 @@ class CompleteEquityAnalysis:
         return results, decision
 
 def main():
-    """Main execution"""
     print(" Complete EQUITY ANALYSIS - GSI TECHNOLOGY")
     print("="*60)
     

@@ -1,8 +1,3 @@
-#!/usr/bin/env python3
-"""
-Extract financial data from 10-K reports (Annual Reports).
-10-K reports contain comprehensive annual financial statements and detailed disclosures.
-"""
 
 import pandas as pd
 import sys
@@ -14,34 +9,18 @@ sys.path.append(str(Path(__file__).parent))
 from utils.excel_parser import ExcelParser
 from utils.data_cleaner import DataCleaner
 
-
 def extract_financial_table(df: pd.DataFrame, 
                             table_type: str,
                             sheet_name: str,
                             metadata: dict) -> pd.DataFrame:
-    """
-    Extract and structure a financial table from 10-K.
-    
-    Args:
-        df: Raw DataFrame from Excel sheet
-        table_type: Type of financial statement
-        sheet_name: Name of the source sheet
-        metadata: File metadata
-        
-    Returns:
-        Cleaned and structured DataFrame
-    """
-    # Remove empty rows and columns
     df = DataCleaner.remove_empty_rows_and_columns(df, threshold=0.3)
     
     if df.empty or df.shape[0] < 2:
         return pd.DataFrame()
     
-    # Find the header row (usually contains fiscal years)
     header_row = 0
     for idx, row in df.iterrows():
         row_str = ' '.join([str(val).lower() for val in row if pd.notna(val)])
-        # Look for year patterns or "march 31" style dates
         if any(kw in row_str for kw in ['march', 'fiscal', 'year ended', '2020', '2021', 
                                          '2022', '2023', '2024', '2025']):
             header_row = idx
@@ -54,7 +33,6 @@ def extract_financial_table(df: pd.DataFrame,
     if df.empty:
         return pd.DataFrame()
     
-    # Clean column names
     new_columns = []
     for i, col in enumerate(df.columns):
         if i == 0:
@@ -64,27 +42,22 @@ def extract_financial_table(df: pd.DataFrame,
             if pd.isna(col) or col_str in ['', 'nan', 'None']:
                 new_columns.append(f'year_{i}')
             else:
-                # Extract year if present
                 year_match = re.search(r'(20\d{2})', col_str)
                 if year_match:
                     new_columns.append(f'fy_{year_match.group(1)}')
                 else:
-                    # Clean the period name
                     clean_name = re.sub(r'[^\w\s\-/]', '', col_str)
                     clean_name = re.sub(r'\s+', '_', clean_name)
                     new_columns.append(clean_name.lower()[:50])  # Limit length
     
     df.columns = new_columns
     
-    # Remove rows where line_item is empty
     df = df[df['line_item'].notna()]
     df = df[df['line_item'].astype(str).str.strip() != '']
     
-    # Clean numeric columns
     numeric_cols = [col for col in df.columns if col != 'line_item']
     df = DataCleaner.clean_financial_values(df, value_columns=numeric_cols)
     
-    # Normalize line item names
     df = DataCleaner.normalize_item_names(df, item_column='line_item')
     
     df.insert(0, 'sheet_name', sheet_name)
@@ -94,22 +67,11 @@ def extract_financial_table(df: pd.DataFrame,
     
     return df
 
-
 def extract_annual_report(excel_file: Path) -> dict:
-    """
-    Extract all financial statements from an annual report.
-    
-    Args:
-        excel_file: Path to 10-K Excel file
-        
-    Returns:
-        Dictionary with DataFrames for each statement type
-    """
     parser = ExcelParser(str(excel_file))
     metadata = parser.extract_metadata_from_filename()
     metadata['source_file'] = excel_file.name
     
-    # Categorize sheets
     categories = parser.find_financial_statement_sheets()
     
     results = {
@@ -121,7 +83,6 @@ def extract_annual_report(excel_file: Path) -> dict:
         'compensation': []
     }
     
-    # Process balance sheets
     for sheet_name in categories['balance_sheet'][:3]:  # Limit to avoid duplicates
         try:
             df = parser.read_sheet(sheet_name)
@@ -131,7 +92,6 @@ def extract_annual_report(excel_file: Path) -> dict:
         except Exception as e:
             print(f"    Warning: Error processing balance sheet '{sheet_name}': {e}")
     
-    # Process income statements
     for sheet_name in categories['income_statement'][:3]:
         try:
             df = parser.read_sheet(sheet_name)
@@ -141,7 +101,6 @@ def extract_annual_report(excel_file: Path) -> dict:
         except Exception as e:
             print(f"    Warning: Error processing income statement '{sheet_name}': {e}")
     
-    # Process cash flow statements
     for sheet_name in categories['cash_flow'][:3]:
         try:
             df = parser.read_sheet(sheet_name)
@@ -151,7 +110,6 @@ def extract_annual_report(excel_file: Path) -> dict:
         except Exception as e:
             print(f"    Warning: Error processing cash flow '{sheet_name}': {e}")
     
-    # Process comprehensive income statements
     for sheet_name in categories['comprehensive_income'][:2]:
         try:
             df = parser.read_sheet(sheet_name)
@@ -161,7 +119,6 @@ def extract_annual_report(excel_file: Path) -> dict:
         except Exception as e:
             print(f"    Warning: Error processing comprehensive income '{sheet_name}': {e}")
     
-    # Process equity statements
     for sheet_name in categories['equity'][:2]:
         try:
             df = parser.read_sheet(sheet_name)
@@ -171,7 +128,6 @@ def extract_annual_report(excel_file: Path) -> dict:
         except Exception as e:
             print(f"    Warning: Error processing equity statement '{sheet_name}': {e}")
     
-    # Process compensation data
     for sheet_name in categories['compensation']:
         try:
             df = parser.read_sheet(sheet_name)
@@ -188,19 +144,7 @@ def extract_annual_report(excel_file: Path) -> dict:
     parser.close()
     return results
 
-
 def process_all_annual_reports(input_dir: Path, output_dir: Path) -> bool:
-    """
-    Process all 10-K files and save by statement type.
-    
-    Args:
-        input_dir: Directory containing 10-K subdirectories by year
-        output_dir: Output directory for CSV files
-        
-    Returns:
-        True if successful, False otherwise
-    """
-    # Aggregated data by statement type
     all_balance_sheets = []
     all_income_statements = []
     all_cash_flows = []
@@ -230,7 +174,6 @@ def process_all_annual_reports(input_dir: Path, output_dir: Path) -> bool:
                 
                 results = extract_annual_report(excel_file)
                 
-                # Aggregate results
                 if results['balance_sheets']:
                     all_balance_sheets.extend(results['balance_sheets'])
                 if results['income_statements']:
@@ -304,9 +247,7 @@ def process_all_annual_reports(input_dir: Path, output_dir: Path) -> bool:
     
     return files_created > 0
 
-
 def main():
-    """Main execution function."""
     project_root = Path(__file__).parent.parent.parent
     input_dir = project_root / "data/raw/annual reports"
     output_dir = project_root / "data/processed/annual_reports"
@@ -331,7 +272,6 @@ def main():
     print("=" * 80)
     
     return 0 if success else 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

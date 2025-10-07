@@ -1,8 +1,3 @@
-#!/usr/bin/env python3
-"""
-IMPROVED Extract financial data from 10-K reports (Annual Reports).
-This version detects financial statement types by CONTENT not just sheet names.
-"""
 
 import pandas as pd
 import sys
@@ -14,26 +9,13 @@ sys.path.append(str(Path(__file__).parent))
 from utils.excel_parser import ExcelParser
 from utils.data_cleaner import DataCleaner
 
-
 def detect_statement_type_by_content(df: pd.DataFrame, sheet_name: str) -> str:
-    """
-    Detect financial statement type by analyzing content.
-    
-    Args:
-        df: DataFrame with sheet data
-        sheet_name: Name of the sheet
-        
-    Returns:
-        Statement type: 'balance_sheet', 'income_statement', 'cash_flow', 
-                       'equity', 'comprehensive_income', or 'unknown'
-    """
     if df.empty or df.shape[0] < 3:
         return 'unknown'
     
     first_col = df.iloc[:, 0].astype(str).str.lower()
     all_text = ' '.join(first_col.tolist())
     
-    # Count keywords for each statement type
     scores = {
         'balance_sheet': 0,
         'income_statement': 0,
@@ -42,74 +24,50 @@ def detect_statement_type_by_content(df: pd.DataFrame, sheet_name: str) -> str:
         'comprehensive_income': 0
     }
     
-    # Balance sheet keywords
     bs_keywords = ['assets', 'liabilities', 'cash and cash equivalents', 
                    'accounts receivable', 'inventories', 'stockholders equity',
                    'property and equipment', 'current assets']
     scores['balance_sheet'] = sum(1 for kw in bs_keywords if kw in all_text)
     
-    # Income statement keywords
     is_keywords = ['net revenues', 'revenue', 'cost of revenues', 'gross profit',
                    'operating expenses', 'research and development',
                    'selling, general and administrative', 'net income', 'net loss',
                    'loss from operations', 'income from operations']
     scores['income_statement'] = sum(1 for kw in is_keywords if kw in all_text)
     
-    # Cash flow keywords
     cf_keywords = ['cash flows', 'operating activities', 'investing activities',
                    'financing activities', 'net increase', 'net decrease',
                    'depreciation', 'capital expenditures']
     scores['cash_flow'] = sum(1 for kw in cf_keywords if kw in all_text)
     
-    # Equity keywords
     eq_keywords = ['common stock', 'additional paid-in capital', 'retained earnings',
                    'accumulated other comprehensive', 'treasury stock',
                    'stock-based compensation expense', 'issuance of common stock']
     scores['equity'] = sum(1 for kw in eq_keywords if kw in all_text)
     
-    # Comprehensive income keywords
     ci_keywords = ['comprehensive income', 'comprehensive loss', 
                    'unrealized gain', 'unrealized loss']
     scores['comprehensive_income'] = sum(1 for kw in ci_keywords if kw in all_text)
     
-    # Return type with highest score (if score > 2)
     max_type = max(scores, key=scores.get)
     if scores[max_type] >= 2:
         return max_type
     
     return 'unknown'
 
-
 def extract_financial_table_v2(df: pd.DataFrame, 
                                table_type: str,
                                sheet_name: str,
                                metadata: dict,
                                year: int) -> pd.DataFrame:
-    """
-    Extract and structure a financial table from 10-K.
-    
-    Args:
-        df: Raw DataFrame from Excel sheet
-        table_type: Type of financial statement
-        sheet_name: Name of the source sheet
-        metadata: File metadata
-        year: Filing year
-        
-    Returns:
-        Cleaned and structured DataFrame
-    """
-    # Remove empty rows and columns
     df = DataCleaner.remove_empty_rows_and_columns(df, threshold=0.3)
     
     if df.empty or df.shape[0] < 2:
         return pd.DataFrame()
     
-    # Find header row (contains year WITH context, not just standalone year)
     header_row = 0
     for idx, row in df.iterrows():
         row_str = ' '.join([str(val).lower() for val in row if pd.notna(val)])
-        # Look for year patterns WITH context (not just "2020" alone)
-        # Must have "march" or "year ended" or multiple years
         has_context = any(pattern in row_str for pattern in ['march', 'year ended', 'fiscal'])
         has_multiple_years = sum(1 for y in ['2020', '2021', '2022', '2023', '2024', '2025'] 
                                 if y in row_str) >= 2
@@ -125,34 +83,29 @@ def extract_financial_table_v2(df: pd.DataFrame,
     if df.empty:
         return pd.DataFrame()
     
-    # Clean column names
     new_columns = []
     for i, col in enumerate(df.columns):
         if i == 0:
             new_columns.append('line_item')
         else:
             col_str = str(col).strip()
-            # Try to extract year
             year_match = re.search(r'(20\d{2})', col_str)
             if year_match:
                 new_columns.append(f'fy_{year_match.group(1)}')
             elif pd.isna(col) or col_str in ['', 'nan', 'None', '​']:
                 new_columns.append(f'col_{i}')
             else:
-                # Clean the column name
                 clean_name = re.sub(r'[^\w\s]', '', col_str)
                 clean_name = re.sub(r'\s+', '_', clean_name).lower()[:30]
                 new_columns.append(clean_name if clean_name else f'col_{i}')
     
     df.columns = new_columns
     
-    # Remove rows where line_item is empty or just punctuation
     df = df[df['line_item'].notna()]
     df['line_item'] = df['line_item'].astype(str).str.strip()
     df = df[df['line_item'] != '']
     df = df[~df['line_item'].str.match(r'^[^\w]+$')]  # Remove rows with only punctuation
     
-    # Clean numeric columns
     numeric_cols = [col for col in df.columns if col != 'line_item']
     df = DataCleaner.clean_financial_values(df, value_columns=numeric_cols)
     
@@ -168,22 +121,11 @@ def extract_financial_table_v2(df: pd.DataFrame,
     
     return df
 
-
 def extract_annual_report_v2(excel_file: Path) -> dict:
-    """
-    Extract all financial statements from an annual report using content detection.
-    
-    Args:
-        excel_file: Path to 10-K Excel file
-        
-    Returns:
-        Dictionary with DataFrames for each statement type
-    """
     parser = ExcelParser(str(excel_file))
     metadata = parser.extract_metadata_from_filename()
     metadata['source_file'] = excel_file.name
     
-    # Determine year from filename or metadata
     year = int(metadata['year']) if metadata['year'] else 2020
     
     results = {
@@ -194,28 +136,23 @@ def extract_annual_report_v2(excel_file: Path) -> dict:
         'equity_statements': []
     }
     
-    # Process ALL sheets and detect type by content
     for sheet_name in parser.get_sheet_names():
         try:
-            # Skip obviously irrelevant sheets
             skip_keywords = ['exhibit', 'No Title', 'note', 'Note', 'accounting pronouncements',
                            'fair value measurement', 'stock pu', 'compensation']
             if any(kw in sheet_name for kw in skip_keywords):
                 continue
             
-            # Read sheet
             df = parser.read_sheet(sheet_name)
             
             if df.shape[0] < 3 or df.shape[1] < 2:
                 continue
             
-            # Detect statement type by content
             stmt_type = detect_statement_type_by_content(df, sheet_name)
             
             if stmt_type == 'unknown':
                 continue
             
-            # Extract the data
             df_clean = extract_financial_table_v2(df, stmt_type, sheet_name, metadata, year)
             
             if df_clean.empty:
@@ -239,19 +176,7 @@ def extract_annual_report_v2(excel_file: Path) -> dict:
     parser.close()
     return results
 
-
 def process_all_annual_reports_v2(input_dir: Path, output_dir: Path) -> bool:
-    """
-    Process all 10-K files with improved content detection.
-    
-    Args:
-        input_dir: Directory containing 10-K subdirectories by year
-        output_dir: Output directory for CSV files
-        
-    Returns:
-        True if successful, False otherwise
-    """
-    # Aggregated data by statement type
     all_balance_sheets = []
     all_income_statements = []
     all_cash_flows = []
@@ -280,7 +205,6 @@ def process_all_annual_reports_v2(input_dir: Path, output_dir: Path) -> bool:
                 
                 results = extract_annual_report_v2(excel_file)
                 
-                # Aggregate results
                 if results['balance_sheets']:
                     all_balance_sheets.extend(results['balance_sheets'])
                     print(f"    ✓ Balance sheet: {len(results['balance_sheets'])} sheet(s)")
@@ -349,9 +273,7 @@ def process_all_annual_reports_v2(input_dir: Path, output_dir: Path) -> bool:
     
     return files_created > 0
 
-
 def main():
-    """Main execution function."""
     project_root = Path(__file__).parent.parent.parent
     input_dir = project_root / "data/raw/annual reports"
     output_dir = project_root / "data/processed/annual_reports"
@@ -377,7 +299,6 @@ def main():
     print("=" * 80)
     
     return 0 if success else 1
-
 
 if __name__ == "__main__":
     import sys

@@ -1,7 +1,3 @@
-"""
-Quarterly Data Analysis for GSI Technology
-Analysis of quarterly trends, seasonality, and patterns
-"""
 
 import pandas as pd
 import numpy as np
@@ -11,34 +7,22 @@ import warnings
 warnings.filterwarnings('ignore')
 
 class QuarterlyAnalyzer:
-    """
-    Quarterly financial data analysis
-    """
     
     def __init__(self, quarterly_income: pd.DataFrame, quarterly_balance: pd.DataFrame):
-        """
-        Initialize with quarterly data
-        """
         self.q_income = quarterly_income
         self.q_balance = quarterly_balance
         
     def extract_quarterly_metrics(self) -> pd.DataFrame:
-        """
-        Extract key metrics from quarterly data
-        """
         quarterly_metrics = []
         
         for year in sorted(self.q_income['year'].unique()):
             year_data = self.q_income[self.q_income['year'] == year]
             
-            # Extract key line items
             revenue_rows = year_data[year_data['line_item'].str.contains('Net revenue', case=False, na=False)]
             gross_profit_rows = year_data[year_data['line_item'].str.contains('Gross profit', case=False, na=False)]
             net_income_rows = year_data[year_data['line_item'].str.contains('Net income', case=False, na=False)]
             
-            # Try to get values (this is complex due to varying column structures)
             for _, row in revenue_rows.iterrows():
-                # Find first substantial numeric value
                 for col in row.index:
                     if col not in ['year', 'filename', 'company', 'form_type', 
                                   'filing_date', 'source_file', 'statement_type', 
@@ -61,9 +45,6 @@ class QuarterlyAnalyzer:
         return pd.DataFrame(quarterly_metrics)
     
     def analyze_seasonality(self) -> Dict:
-        """
-        Analyze quarterly seasonality patterns
-        """
         q_metrics = self.extract_quarterly_metrics()
         
         if q_metrics.empty or len(q_metrics) < 12:
@@ -72,7 +53,6 @@ class QuarterlyAnalyzer:
                 'note': 'Insufficient quarterly data for seasonality analysis'
             }
         
-        # Group by estimated quarter (if we can determine it)
         analysis = {
             'seasonality_detected': False,
             'quarterly_data_available': len(q_metrics),
@@ -83,9 +63,6 @@ class QuarterlyAnalyzer:
         return analysis
     
     def analyze_quarterly_volatility(self) -> Dict:
-        """
-        Analyze quarterly revenue volatility
-        """
         q_metrics = self.extract_quarterly_metrics()
         
         if q_metrics.empty:
@@ -121,7 +98,6 @@ class QuarterlyAnalyzer:
         return analysis
     
     def _interpret_quarterly_volatility(self, cv: float) -> str:
-        """Interpret quarterly volatility"""
         if pd.isna(cv):
             return 'Insufficient data'
         elif cv > 30:
@@ -132,9 +108,6 @@ class QuarterlyAnalyzer:
             return 'LOW - Stable quarterly performance'
     
     def print_quarterly_analysis(self, seasonality: Dict, volatility: Dict):
-        """
-        Print quarterly analysis
-        """
         print("\n" + "="*80)
         print(" QUARTERLY DATA ANALYSIS")
         print("="*80)

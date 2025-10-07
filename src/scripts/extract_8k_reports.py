@@ -1,8 +1,3 @@
-#!/usr/bin/env python3
-"""
-Extract financial data from 8-K reports (Current Reports).
-8-K reports contain material events and earnings releases with key financial highlights.
-"""
 
 import pandas as pd
 import sys
@@ -14,56 +9,37 @@ sys.path.append(str(Path(__file__).parent))
 from utils.excel_parser import ExcelParser
 from utils.data_cleaner import DataCleaner
 
-
 def extract_8k_data(excel_file: Path, metadata: dict) -> pd.DataFrame:
-    """
-    Extract financial data from a single 8-K Excel file.
-    
-    Args:
-        excel_file: Path to Excel file
-        metadata: Metadata about the file
-        
-    Returns:
-        DataFrame with extracted data
-    """
     parser = ExcelParser(str(excel_file))
     
-    # Categorize sheets
     categories = parser.find_financial_statement_sheets()
     
     all_data = []
     
-    # Focus on income statement and balance sheet data
     relevant_sheets = (categories['income_statement'] + 
                       categories['balance_sheet'] + 
                       categories['cash_flow'])
     
     if not relevant_sheets:
-        # If no categorized sheets, try all sheets
         relevant_sheets = parser.get_sheet_names()
     
     for sheet_name in relevant_sheets:
         try:
             df = parser.read_sheet(sheet_name)
             
-            # Skip very small sheets
             if df.shape[0] < 3 or df.shape[1] < 2:
                 continue
             
-            # Find table boundaries
             start_row, end_row = parser.detect_table_boundaries(df)
             df = df.iloc[start_row:end_row]
             
-            # Clean the dataframe
             df = DataCleaner.remove_empty_rows_and_columns(df, threshold=0.3)
             
             if df.empty:
                 continue
             
-            # Try to identify if this is a financial table
             first_col = df.iloc[:, 0].astype(str).str.lower()
             
-            # Look for financial statement keywords
             financial_keywords = ['revenue', 'income', 'expense', 'assets', 
                                 'liabilities', 'equity', 'cash', 'profit', 'loss']
             
@@ -75,15 +51,11 @@ def extract_8k_data(excel_file: Path, metadata: dict) -> pd.DataFrame:
             if not has_financial_data:
                 continue
             
-            # Extract the data
-            # Assume first column is the line item name
             df = df.reset_index(drop=True)
             
-            # Clean column names
             df.columns = [f"col_{i}" if i == 0 else f"period_{i-1}" 
                          for i in range(len(df.columns))]
             
-            # Rename first column to 'line_item'
             df.rename(columns={'col_0': 'line_item'}, inplace=True)
             
             df['sheet_name'] = sheet_name
@@ -100,7 +72,6 @@ def extract_8k_data(excel_file: Path, metadata: dict) -> pd.DataFrame:
     if not all_data:
         return pd.DataFrame()
     
-    # Combine all extracted data
     combined_df = pd.concat(all_data, ignore_index=True)
     
     for key, value in metadata.items():
@@ -108,9 +79,7 @@ def extract_8k_data(excel_file: Path, metadata: dict) -> pd.DataFrame:
     
     return combined_df
 
-
 def _categorize_sheet(sheet_name: str) -> str:
-    """Categorize sheet by type based on name."""
     name_lower = sheet_name.lower()
     
     if any(kw in name_lower for kw in ['income', 'operation', 'profit', 'loss']):
@@ -122,18 +91,7 @@ def _categorize_sheet(sheet_name: str) -> str:
     else:
         return 'other'
 
-
 def process_all_8k_files(input_dir: Path, output_file: Path) -> bool:
-    """
-    Process all 8-K files and combine into single CSV.
-    
-    Args:
-        input_dir: Directory containing 8-K subdirectories by year
-        output_file: Output CSV file path
-        
-    Returns:
-        True if successful, False otherwise
-    """
     all_data = []
     total_files = 0
     processed_files = 0
@@ -154,13 +112,11 @@ def process_all_8k_files(input_dir: Path, output_file: Path) -> bool:
             try:
                 print(f"  Processing: {excel_file.name}")
                 
-                # Parse metadata from filename
                 parser = ExcelParser(str(excel_file))
                 metadata = parser.extract_metadata_from_filename()
                 metadata['source_file'] = excel_file.name
                 metadata['year_folder'] = year
                 
-                # Extract data
                 df = extract_8k_data(excel_file, metadata)
                 
                 if not df.empty:
@@ -178,7 +134,6 @@ def process_all_8k_files(input_dir: Path, output_file: Path) -> bool:
         print("\n✗ No data extracted from any files!")
         return False
     
-    # Combine all data
     print(f"\nCombining data from {len(all_data)} files...")
     combined_df = pd.concat(all_data, ignore_index=True)
     
@@ -191,9 +146,7 @@ def process_all_8k_files(input_dir: Path, output_file: Path) -> bool:
     
     return True
 
-
 def main():
-    """Main execution function."""
     project_root = Path(__file__).parent.parent.parent
     input_dir = project_root / "data/raw/8-k related"
     output_file = project_root / "data/processed/8k_reports/financial_highlights.csv"
@@ -218,7 +171,6 @@ def main():
     print("=" * 80)
     
     return 0 if success else 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

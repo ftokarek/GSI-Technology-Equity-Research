@@ -1,7 +1,3 @@
-"""
-Comprehensive Equity Analysis for GSI Technology
-Combines financial metrics, trend analysis, and valuation analysis
-"""
 
 import pandas as pd
 import numpy as np
@@ -19,21 +15,12 @@ from analysis.trend_analysis import TrendAnalyzer
 from analysis.valuation_analysis import ValuationAnalyzer
 
 class ComprehensiveEquityAnalysis:
-    """
-    Comprehensive equity analysis combining all analytical components
-    """
     
     def __init__(self, data_dir: str = "data/consolidated"):
-        """
-        Initialize comprehensive analysis
-        """
         self.data_dir = Path(data_dir)
         self.load_data()
         
     def load_data(self):
-        """
-        Load all consolidated financial data
-        """
         print("Loading data")
         
         self.income = pd.read_csv(self.data_dir / "master_income_statement.csv")
@@ -52,9 +39,6 @@ class ComprehensiveEquityAnalysis:
         print(f"  Market Data: {len(self.market) if self.market is not None else 0} years")
         
     def run_comprehensive_analysis(self) -> Dict:
-        """
-        Run comprehensive equity analysis
-        """
         print("\n" + "="*80)
         print(" Comprehensive EQUITY ANALYSIS - GSI TECHNOLOGY")
         print("="*80)
@@ -85,7 +69,6 @@ class ComprehensiveEquityAnalysis:
             'attractiveness': attractiveness
         }
         
-        # Combine all results
         comprehensive_results = {
             'financial_metrics': {
                 'metrics': metrics,
@@ -104,9 +87,6 @@ class ComprehensiveEquityAnalysis:
         return comprehensive_results
     
     def print_executive_summary(self, results: Dict):
-        """
-        Print executive summary of the analysis
-        """
         print("\n" + "="*80)
         print("EXECUTIVE SUMMARY - GSI TECHNOLOGY EQUITY ANALYSIS")
         print("="*80)
@@ -115,7 +95,6 @@ class ComprehensiveEquityAnalysis:
         trend_analysis = results['trend_analysis']
         valuation = results['valuation_analysis']
         
-        # Revenue Summary
         growth_df = metrics['growth_metrics']
         recent_revenue = growth_df[growth_df['year'] >= 2020]['revenue']
         latest_revenue = recent_revenue.iloc[-1] if not recent_revenue.empty else np.nan
@@ -124,14 +103,12 @@ class ComprehensiveEquityAnalysis:
         if pd.notna(latest_revenue):
             print(f"  Latest Revenue (2025): ${latest_revenue:,.0f}K")
         
-        # Revenue trends
         revenue_trends = trend_analysis['revenue_trends']
         if '3y' in revenue_trends:
             print(f"  3-Year CAGR: {revenue_trends['3y']['cagr']:.1f}%")
         if '10y' in revenue_trends:
             print(f"  10-Year CAGR: {revenue_trends['10y']['cagr']:.1f}%")
         
-        # Profitability Summary
         profit_df = metrics['profitability_metrics']
         recent_margins = profit_df[profit_df['year'] >= 2020]
         
@@ -142,7 +119,6 @@ class ComprehensiveEquityAnalysis:
             print(f"  Average Gross Margin (2020-2025): {avg_gross_margin:.1f}%")
             print(f"  Average Operating Margin (2020-2025): {avg_operating_margin:.1f}%")
         
-        # Balance Sheet Summary
         balance_df = metrics['balance_sheet_metrics']
         recent_balance = balance_df[balance_df['year'] >= 2020]
         
@@ -157,7 +133,6 @@ class ComprehensiveEquityAnalysis:
                 print(f"  Latest Total Assets: ${latest_assets:,.0f}K")
             print(f"  Latest Current Ratio: {latest_current_ratio:.2f}")
         
-        # Valuation Summary
         print(f"\nVALUATION SUMMARY:")
         current_valuation = valuation['current_valuation']
         fair_value = valuation['fair_value_estimation']
@@ -175,7 +150,6 @@ class ComprehensiveEquityAnalysis:
         print(f"  Confidence Level: {attractiveness['confidence']}")
         print(f"  Attractiveness Score: {attractiveness['score']}/10")
         
-        # Key Risks and Opportunities
         print(f"\n  KEY RISKS:")
         print(f"  • Declining revenue trend (-53% over 5 years)")
         print(f"  • Negative operating margins (-73% average)")
@@ -188,7 +162,6 @@ class ComprehensiveEquityAnalysis:
         print(f"  • Potential for operational turnaround")
         print(f"  • Undervalued based on book value")
         
-        # Final Recommendation
         print(f"\n  Final RECOMMENDATION:")
         if attractiveness['recommendation'] in ['STRONG BUY', 'BUY']:
             print(f"    {attractiveness['recommendation']} - GSI Technology presents")
@@ -201,9 +174,6 @@ class ComprehensiveEquityAnalysis:
             print(f"     challenges that outweigh potential opportunities")
     
     def save_comprehensive_results(self, results: Dict, output_dir: str = "data/analysis"):
-        """
-        Save comprehensive analysis results
-        """
         output_path = Path(output_dir)
         output_path.mkdir(exist_ok=True)
         
@@ -218,7 +188,6 @@ class ComprehensiveEquityAnalysis:
         
         trend_analysis = results['trend_analysis']
         for trend_name, trend_data in trend_analysis.items():
-            # Convert dict to DataFrame
             trend_df = pd.DataFrame(trend_data).T
             filename = f"trend_{trend_name}.csv"
             filepath = output_path / filename
@@ -227,17 +196,14 @@ class ComprehensiveEquityAnalysis:
         
         valuation_analysis = results['valuation_analysis']
         
-        # Current valuation
         current_valuation_df = pd.DataFrame([valuation_analysis['current_valuation']])
         current_valuation_df.to_csv(output_path / "valuation_current.csv", index=False)
         print(f"    Saved valuation_current.csv")
         
-        # Fair value estimation
         fair_value_df = pd.DataFrame([valuation_analysis['fair_value_estimation']])
         fair_value_df.to_csv(output_path / "valuation_fair_value.csv", index=False)
         print(f"    Saved valuation_fair_value.csv")
         
-        # Attractiveness
         attractiveness_df = pd.DataFrame([valuation_analysis['attractiveness']])
         attractiveness_df.to_csv(output_path / "valuation_attractiveness.csv", index=False)
         print(f"    Saved valuation_attractiveness.csv")
@@ -260,13 +226,8 @@ class ComprehensiveEquityAnalysis:
         print(f"  All comprehensive analysis results saved!")
     
     def run_full_analysis(self):
-        """
-        Run complete comprehensive analysis
-        """
-        # Run analysis
         results = self.run_comprehensive_analysis()
         
-        # Print executive summary
         self.print_executive_summary(results)
         
         self.save_comprehensive_results(results)
@@ -274,15 +235,11 @@ class ComprehensiveEquityAnalysis:
         return results
 
 def main():
-    """
-    Main execution function
-    """
     print(" Comprehensive EQUITY ANALYSIS - GSI TECHNOLOGY")
     print("="*60)
     
     analysis = ComprehensiveEquityAnalysis()
     
-    # Run full analysis
     results = analysis.run_full_analysis()
     
     print("\n" + "="*80)

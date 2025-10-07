@@ -1,7 +1,3 @@
-"""
-Trend Analysis Module for GSI Technology
-Comprehensive trend analysis across different time periods
-"""
 
 import pandas as pd
 import numpy as np
@@ -10,28 +6,17 @@ import warnings
 warnings.filterwarnings('ignore')
 
 class TrendAnalyzer:
-    """
-    Comprehensive trend analysis for financial metrics
-    """
     
     def __init__(self, metrics_data: Dict[str, pd.DataFrame]):
-        """
-        Initialize with calculated metrics data
-        """
         self.metrics = metrics_data
         
     def analyze_revenue_trends(self) -> Dict:
-        """
-        Analyze revenue trends across different periods
-        """
         growth_df = self.metrics['growth_metrics']
         
-        # Filter to recent years (2011-2025)
         recent_data = growth_df[growth_df['year'] >= 2011].copy()
         
         trends = {}
         
-        # 3-Year Analysis (2023-2025)
         last_3y = recent_data.tail(3)
         if len(last_3y) >= 3:
             trends['3y'] = {
@@ -44,7 +29,6 @@ class TrendAnalyzer:
                 'trend_direction': 'declining' if last_3y.iloc[-1]['revenue'] < last_3y.iloc[0]['revenue'] else 'growing'
             }
         
-        # 10-Year Analysis (2016-2025)
         last_10y = recent_data.tail(10)
         if len(last_10y) >= 5:
             trends['10y'] = {
@@ -57,7 +41,6 @@ class TrendAnalyzer:
                 'trend_direction': 'declining' if last_10y.iloc[-1]['revenue'] < last_10y.iloc[0]['revenue'] else 'growing'
             }
         
-        # All-Time Analysis (2011-2025)
         if len(recent_data) >= 10:
             trends['all_time'] = {
                 'period': '2011-2025',
@@ -74,15 +57,11 @@ class TrendAnalyzer:
         return trends
     
     def analyze_profitability_trends(self) -> Dict:
-        """
-        Analyze profitability trends across different periods
-        """
         profit_df = self.metrics['profitability_metrics']
         recent_data = profit_df[profit_df['year'] >= 2011].copy()
         
         trends = {}
         
-        # 3-Year Analysis
         last_3y = recent_data.tail(3)
         if len(last_3y) >= 3:
             trends['3y'] = {
@@ -94,7 +73,6 @@ class TrendAnalyzer:
                 'operating_margin_trend': 'improving' if last_3y.iloc[-1]['operating_margin'] > last_3y.iloc[0]['operating_margin'] else 'declining'
             }
         
-        # 10-Year Analysis
         last_10y = recent_data.tail(10)
         if len(last_10y) >= 5:
             trends['10y'] = {
@@ -106,7 +84,6 @@ class TrendAnalyzer:
                 'operating_margin_trend': 'improving' if last_10y.iloc[-1]['operating_margin'] > last_10y.iloc[0]['operating_margin'] else 'declining'
             }
         
-        # All-Time Analysis
         if len(recent_data) >= 10:
             trends['all_time'] = {
                 'period': '2011-2025',
@@ -122,15 +99,11 @@ class TrendAnalyzer:
         return trends
     
     def analyze_balance_sheet_trends(self) -> Dict:
-        """
-        Analyze balance sheet trends across different periods
-        """
         balance_df = self.metrics['balance_sheet_metrics']
         recent_data = balance_df[balance_df['year'] >= 2011].copy()
         
         trends = {}
         
-        # 3-Year Analysis
         last_3y = recent_data.tail(3)
         if len(last_3y) >= 3:
             trends['3y'] = {
@@ -143,7 +116,6 @@ class TrendAnalyzer:
                 'assets_trend': 'improving' if last_3y.iloc[-1]['total_assets'] > last_3y.iloc[0]['total_assets'] else 'declining'
             }
         
-        # 10-Year Analysis
         last_10y = recent_data.tail(10)
         if len(last_10y) >= 5:
             trends['10y'] = {
@@ -156,7 +128,6 @@ class TrendAnalyzer:
                 'assets_trend': 'improving' if last_10y.iloc[-1]['total_assets'] > last_10y.iloc[0]['total_assets'] else 'declining'
             }
         
-        # All-Time Analysis
         if len(recent_data) >= 10:
             trends['all_time'] = {
                 'period': '2011-2025',
@@ -173,15 +144,11 @@ class TrendAnalyzer:
         return trends
     
     def analyze_returns_trends(self) -> Dict:
-        """
-        Analyze returns trends across different periods
-        """
         returns_df = self.metrics['returns_metrics']
         recent_data = returns_df[returns_df['year'] >= 2011].copy()
         
         trends = {}
         
-        # 3-Year Analysis
         last_3y = recent_data.tail(3)
         if len(last_3y) >= 3:
             trends['3y'] = {
@@ -193,7 +160,6 @@ class TrendAnalyzer:
                 'roa_trend': 'improving' if last_3y.iloc[-1]['roa'] > last_3y.iloc[0]['roa'] else 'declining'
             }
         
-        # 10-Year Analysis
         last_10y = recent_data.tail(10)
         if len(last_10y) >= 5:
             trends['10y'] = {
@@ -205,7 +171,6 @@ class TrendAnalyzer:
                 'roa_trend': 'improving' if last_10y.iloc[-1]['roa'] > last_10y.iloc[0]['roa'] else 'declining'
             }
         
-        # All-Time Analysis
         if len(recent_data) >= 10:
             trends['all_time'] = {
                 'period': '2011-2025',
@@ -221,9 +186,6 @@ class TrendAnalyzer:
         return trends
     
     def generate_trend_summary(self) -> Dict:
-        """
-        Generate comprehensive trend summary across all metrics
-        """
         summary = {
             'revenue_trends': self.analyze_revenue_trends(),
             'profitability_trends': self.analyze_profitability_trends(),
@@ -234,14 +196,10 @@ class TrendAnalyzer:
         return summary
     
     def print_trend_analysis(self, trend_summary: Dict):
-        """
-        Print comprehensive trend analysis
-        """
         print("\n" + "="*80)
         print(" Comprehensive TREND ANALYSIS")
         print("="*80)
         
-        # Revenue Trends
         print("\n REVENUE TRENDS:")
         revenue_trends = trend_summary['revenue_trends']
         
@@ -256,7 +214,6 @@ class TrendAnalyzer:
             if 'peak_revenue' in data:
                 print(f"    Peak Revenue: ${data['peak_revenue']:,.0f}K ({data['peak_year']})")
         
-        # Profitability Trends
         print("\n PROFITABILITY TRENDS:")
         profit_trends = trend_summary['profitability_trends']
         
@@ -275,7 +232,6 @@ class TrendAnalyzer:
                 print(f"    Best Gross Margin: {data['best_gross_margin']:.1f}% ({data['best_gross_margin_year']})")
                 print(f"    Worst Operating Margin: {data['worst_operating_margin']:.1f}% ({data['worst_operating_margin_year']})")
         
-        # Balance Sheet Trends
         print("\n BALANCE SHEET TRENDS:")
         balance_trends = trend_summary['balance_sheet_trends']
         
@@ -296,7 +252,6 @@ class TrendAnalyzer:
                 print(f"    Peak Cash: ${data['peak_cash']:,.0f}K ({data['peak_cash_year']})")
                 print(f"    Peak Assets: ${data['peak_assets']:,.0f}K ({data['peak_assets_year']})")
         
-        # Returns Trends
         print("\n RETURNS TRENDS:")
         returns_trends = trend_summary['returns_trends']
         

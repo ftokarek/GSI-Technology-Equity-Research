@@ -1,7 +1,3 @@
-"""
-Main Financial Analysis Script for GSI Technology
-Comprehensive equity analysis with metrics calculation and reporting
-"""
 
 import pandas as pd
 import numpy as np
@@ -17,21 +13,12 @@ sys.path.append(str(Path(__file__).parent.parent))
 from analysis.financial_metrics import FinancialMetricsCalculator
 
 class GSIEquityAnalysis:
-    """
-    Comprehensive equity analysis for GSI Technology
-    """
     
     def __init__(self, data_dir: str = "data/consolidated"):
-        """
-        Initialize analysis with consolidated data
-        """
         self.data_dir = Path(data_dir)
         self.load_data()
         
     def load_data(self):
-        """
-        Load all consolidated financial data
-        """
         print("Loading data")
         
         self.income = pd.read_csv(self.data_dir / "master_income_statement.csv")
@@ -50,9 +37,6 @@ class GSIEquityAnalysis:
         print(f"  Market Data: {len(self.market) if self.market is not None else 0} years")
         
     def run_comprehensive_analysis(self) -> Dict:
-        """
-        Run comprehensive financial analysis
-        """
         print("\n" + "="*80)
         print(" STARTING Comprehensive FINANCIAL ANALYSIS")
         print("="*80)
@@ -83,9 +67,6 @@ class GSIEquityAnalysis:
         return analysis_results
     
     def print_analysis_summary(self, analysis_results: Dict):
-        """
-        Print comprehensive analysis summary
-        """
         print("\n" + "="*80)
         print(" FINANCIAL ANALYSIS SUMMARY")
         print("="*80)
@@ -93,7 +74,6 @@ class GSIEquityAnalysis:
         metrics = analysis_results['metrics']
         summary = analysis_results['summary']
         
-        # Revenue Analysis
         print("\n REVENUE ANALYSIS:")
         growth_df = metrics['growth_metrics']
         recent_growth = growth_df[growth_df['year'] >= 2020]
@@ -108,7 +88,6 @@ class GSIEquityAnalysis:
                     growth_str = f" ({growth:+.1f}%)" if pd.notna(growth) else ""
                     print(f"    {year}: ${revenue:>8,.0f}K{growth_str}")
         
-        # Profitability Analysis
         print("\n PROFITABILITY ANALYSIS:")
         profit_df = metrics['profitability_metrics']
         recent_profit = profit_df[profit_df['year'] >= 2020]
@@ -131,7 +110,6 @@ class GSIEquityAnalysis:
                     if pd.notna(net_margin):
                         print(f"           Net Margin: {net_margin:>6.1f}%")
         
-        # Balance Sheet Analysis
         print("\n BALANCE SHEET ANALYSIS:")
         balance_df = metrics['balance_sheet_metrics']
         recent_balance = balance_df[balance_df['year'] >= 2020]
@@ -155,7 +133,6 @@ class GSIEquityAnalysis:
                         print(f" | Current {current_ratio:>5.2f}", end="")
                     print()
         
-        # Returns Analysis
         print("\n RETURNS ANALYSIS:")
         returns_df = metrics['returns_metrics']
         recent_returns = returns_df[returns_df['year'] >= 2020]
@@ -178,7 +155,6 @@ class GSIEquityAnalysis:
                         print(f" ROIC {roic:>6.1f}%", end="")
                     print()
         
-        # Summary Statistics
         print("\n SUMMARY STATISTICS:")
         if 'growth_metrics' in summary:
             growth_stats = summary['growth_metrics']
@@ -202,9 +178,6 @@ class GSIEquityAnalysis:
                 print(f"  Average ROA (3Y): {returns_stats['roa_3y_avg']:.1f}%")
     
     def save_analysis_results(self, analysis_results: Dict, output_dir: str = "data/analysis"):
-        """
-        Save analysis results to CSV files
-        """
         output_path = Path(output_dir)
         output_path.mkdir(exist_ok=True)
         
@@ -223,13 +196,8 @@ class GSIEquityAnalysis:
         print(f" All analysis results saved!")
     
     def run_full_analysis(self):
-        """
-        Run complete analysis pipeline
-        """
-        # Run analysis
         results = self.run_comprehensive_analysis()
         
-        # Print summary
         self.print_analysis_summary(results)
         
         self.save_analysis_results(results)
@@ -237,15 +205,11 @@ class GSIEquityAnalysis:
         return results
 
 def main():
-    """
-    Main execution function
-    """
     print(" GSI Technology Equity Analysis")
     print("="*50)
     
     analysis = GSIEquityAnalysis()
     
-    # Run full analysis
     results = analysis.run_full_analysis()
     
     print("\n" + "="*80)

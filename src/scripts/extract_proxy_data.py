@@ -1,8 +1,3 @@
-#!/usr/bin/env python3
-"""
-Extract data from Proxy Statements (DEF 14A).
-Proxy statements contain executive compensation, board composition, and governance data.
-"""
 
 import pandas as pd
 import sys
@@ -13,17 +8,7 @@ sys.path.append(str(Path(__file__).parent))
 from utils.excel_parser import ExcelParser
 from utils.data_cleaner import DataCleaner
 
-
 def extract_proxy_data(excel_file: Path) -> pd.DataFrame:
-    """
-    Extract data from a proxy statement.
-    
-    Args:
-        excel_file: Path to proxy statement Excel file
-        
-    Returns:
-        DataFrame with extracted data
-    """
     parser = ExcelParser(str(excel_file))
     metadata = parser.extract_metadata_from_filename()
     metadata['source_file'] = excel_file.name
@@ -36,11 +21,9 @@ def extract_proxy_data(excel_file: Path) -> pd.DataFrame:
         try:
             df = parser.read_sheet(sheet_name)
             
-            # Skip very small sheets
             if df.shape[0] < 2 or df.shape[1] < 2:
                 continue
             
-            # Clean the data
             df = DataCleaner.remove_empty_rows_and_columns(df, threshold=0.3)
             
             if df.empty:
@@ -61,23 +44,11 @@ def extract_proxy_data(excel_file: Path) -> pd.DataFrame:
     if not all_data:
         return pd.DataFrame()
     
-    # Combine all data
     combined_df = pd.concat(all_data, ignore_index=True)
     
     return combined_df
 
-
 def process_all_proxy_statements(input_dir: Path, output_file: Path) -> bool:
-    """
-    Process all proxy statements and save to CSV.
-    
-    Args:
-        input_dir: Directory containing proxy statement subdirectories
-        output_file: Output CSV file path
-        
-    Returns:
-        True if successful, False otherwise
-    """
     all_data = []
     total_files = 0
     processed_files = 0
@@ -115,7 +86,6 @@ def process_all_proxy_statements(input_dir: Path, output_file: Path) -> bool:
         print("\n✗ No data extracted from any files!")
         return False
     
-    # Combine all data
     print(f"\nCombining data from {len(all_data)} files...")
     combined_df = pd.concat(all_data, ignore_index=True)
     
@@ -128,9 +98,7 @@ def process_all_proxy_statements(input_dir: Path, output_file: Path) -> bool:
     
     return True
 
-
 def main():
-    """Main execution function."""
     project_root = Path(__file__).parent.parent.parent
     input_dir = project_root / "data/raw/proxies and info statements"
     output_file = project_root / "data/processed/proxy_statements/proxy_data.csv"
@@ -155,7 +123,6 @@ def main():
     print("=" * 80)
     
     return 0 if success else 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

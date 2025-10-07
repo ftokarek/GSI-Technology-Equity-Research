@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-"""
-Data Consolidation Module for GSI Technology Equity Research.
-
-This module consolidates all processed financial data (income statements, 
-balance sheets, cash flows, market data) into unified datasets for analysis.
-"""
 
 import pandas as pd
 import numpy as np
@@ -13,23 +6,13 @@ from datetime import datetime
 import warnings
 warnings.filterwarnings('ignore')
 
-
 class DataConsolidator:
-    """Consolidates multiple financial data sources into unified datasets."""
     
     def __init__(self, processed_data_dir: str, output_dir: str):
-        """
-        Initialize the data consolidator.
-        
-        Args:
-            processed_data_dir: Path to processed data directory
-            output_dir: Path to output consolidated data
-        """
         self.processed_dir = Path(processed_data_dir)
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         
-        # Storage for loaded data
         self.market_data = None
         self.annual_income = None
         self.annual_balance = None
@@ -38,7 +21,6 @@ class DataConsolidator:
         self.quarterly_balance = None
         
     def load_all_data(self):
-        """Load all processed CSV files."""
         print("=" * 80)
         print("LOADING PROCESSED DATA")
         print("=" * 80)
@@ -90,7 +72,6 @@ class DataConsolidator:
         print()
     
     def analyze_data_structure(self):
-        """Analyze the structure of loaded data."""
         print("=" * 80)
         print("DATA STRUCTURE ANALYSIS")
         print("=" * 80)
@@ -128,16 +109,6 @@ class DataConsolidator:
         print()
     
     def extract_key_financial_items(self, df, item_mappings):
-        """
-        Extract key financial line items from a dataframe.
-        
-        Args:
-            df: DataFrame with financial data
-            item_mappings: Dictionary mapping standard names to possible line item names
-            
-        Returns:
-            DataFrame with extracted items
-        """
         extracted_data = []
         
         for year in sorted(df['year'].unique()):
@@ -148,7 +119,6 @@ class DataConsolidator:
                 value = None
                 all_values = []  # Will store (column_index, value, sheet_priority) tuples
                 
-                # Try to find the item using various name matches
                 for name_pattern in possible_names:
                     matches = year_data[
                         year_data['line_item'].str.lower().str.contains(
@@ -159,12 +129,9 @@ class DataConsolidator:
                     ]
                     
                     if not matches.empty:
-                        # Collect ALL numeric values from this row WITH column order AND sheet priority
                         for _, row in matches.iterrows():
                             col_list = list(matches.columns)
                             
-                            # SKIP rows with actual quarterly data
-                            # Check if this ROW has values in columns that are quarterly identifiers
                             quarterly_cols_with_data = 0
                             quarterly_col_names = ['june_30', 'september_30', 'december_31', 'march_31']
                             for col_name in quarterly_col_names:
@@ -173,15 +140,11 @@ class DataConsolidator:
                             
                             has_quarterly = quarterly_cols_with_data >= 2  # If 2+ quarterly values present, it's quarterly data
                             
-                            # ONLY skip if has quarterly data
-                            # Don't blanket exclude sheets - let the data speak for itself
                             if has_quarterly:
                                 continue  # Skip rows with actual quarterly data
                             
                             sheet_name = str(row.get('sheet_name', '')).lower()
                             
-                            # Determine sheet priority (lower = better)
-                            # Prefer: financial statements > consolidated > operations > valuation > consideration > management
                             if 'financial statement' in sheet_name:
                                 sheet_priority = 0
                             elif 'consolidated' in sheet_name and ('operation' in sheet_name or 'balance' in sheet_name):
@@ -199,7 +162,6 @@ class DataConsolidator:
                             else:
                                 sheet_priority = 5  # Default middle priority
                             
-                            # Iterate through columns to collect values
                             for col_idx, col in enumerate(col_list):
                                 if col not in ['year', 'line_item', 'filename', 'company', 
                                              'form_type', 'filing_date', 'source_file', 
@@ -208,9 +170,7 @@ class DataConsolidator:
                                     if pd.notna(val) and val != '':
                                         try:
                                             num_val = float(val)
-                                            # Filter out obviously wrong values
                                             if abs(num_val) > 0.01:  # Ignore very small values
-                                                # Store with sheet priority, then column index
                                                 all_values.append((sheet_priority, col_idx, abs(num_val)))
                                         except (ValueError, TypeError):
                                             continue
@@ -218,21 +178,14 @@ class DataConsolidator:
                         if all_values:
                             break
                 
-                # Choose the FIRST large value from the BEST sheet (likely current year)
-                # Financial statements typically show: Current Year, Prior Year, 2 Years Ago
-                # We want the FIRST column (current year), not the largest
-                # Percentages are typically 0-100, actual values are in thousands (>100)
                 if all_values:
-                    # Sort by: 1) sheet priority (lower = better), 2) column index
                     all_values.sort(key=lambda x: (x[0], x[1]))
                     
                     large_values = [(priority, idx, v) for priority, idx, v in all_values if v > 100]
                     
                     if large_values:
-                        # Take FIRST large value from best priority sheet
                         value = large_values[0][2]
                     else:
-                        # If no large values, take the first of what we have
                         value = all_values[0][2]
                 
                 row_data[standard_name] = value
@@ -242,14 +195,12 @@ class DataConsolidator:
         return pd.DataFrame(extracted_data)
     
     def create_master_income_statement(self):
-        """Create consolidated income statement with key metrics."""
         print("Creating master income statement...")
         
         if self.annual_income is None:
             print("  ✗ No annual income data available")
             return None
         
-        # Define key items to extract
         item_mappings = {
             'revenue': ['net revenue', 'total revenue', 'revenue'],
             'cost_of_revenue': ['cost of goods sold', 'cost of revenue', 'cogs'],
@@ -289,7 +240,6 @@ class DataConsolidator:
         return master_income
     
     def create_master_balance_sheet(self):
-        """Create consolidated balance sheet with key metrics."""
         print("\nCreating master balance sheet...")
         
         if self.annual_balance is None:
@@ -329,7 +279,6 @@ class DataConsolidator:
         return master_balance
     
     def create_master_cashflow(self):
-        """Create consolidated cash flow statement."""
         print("\nCreating master cash flow statement...")
         
         if self.annual_cashflow is None:
@@ -365,7 +314,6 @@ class DataConsolidator:
         return master_cashflow
     
     def create_market_summary(self):
-        """Create market data summary by year."""
         print("\nCreating market data summary...")
         
         if self.market_data is None:
@@ -392,7 +340,6 @@ class DataConsolidator:
         return annual_summary
     
     def consolidate_all(self):
-        """Run full consolidation process."""
         print("\n")
         print("=" * 80)
         print("STARTING DATA CONSOLIDATION")
@@ -401,7 +348,6 @@ class DataConsolidator:
         
         self.load_all_data()
         
-        # Analyze structure
         self.analyze_data_structure()
         
         print("=" * 80)
@@ -433,9 +379,7 @@ class DataConsolidator:
             'market': market
         }
 
-
 def main():
-    """Main execution function."""
     project_root = Path(__file__).parent.parent.parent
     processed_dir = project_root / "data/processed"
     output_dir = project_root / "data/consolidated"
@@ -444,7 +388,6 @@ def main():
     results = consolidator.consolidate_all()
     
     return 0
-
 
 if __name__ == "__main__":
     import sys

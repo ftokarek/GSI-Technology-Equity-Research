@@ -1,26 +1,10 @@
-#!/usr/bin/env python3
-"""
-Master script to run all data extraction scripts.
-Extracts all financial data from GSI Technology SEC filings and market data.
-"""
 
 import sys
 from pathlib import Path
 from datetime import datetime
 import subprocess
 
-
 def run_script(script_name: str, description: str) -> bool:
-    """
-    Run a single extraction script.
-    
-    Args:
-        script_name: Name of the script to run
-        description: Description of what the script does
-        
-    Returns:
-        True if successful, False otherwise
-    """
     print()
     print("=" * 80)
     print(f"Running: {description}")
@@ -47,16 +31,13 @@ def run_script(script_name: str, description: str) -> bool:
         print(f"\n✗ Error running {script_name}: {str(e)}")
         return False
 
-
 def main():
-    """Main execution function."""
     print("=" * 80)
     print("GSI TECHNOLOGY - COMPREHENSIVE DATA EXTRACTION")
     print("=" * 80)
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 80)
     
-    # Define extraction scripts in order of execution
     scripts = [
         ("extract_market_data.py", "Market Data (Stock Prices)"),
         ("extract_8k_reports.py", "8-K Reports (Current Reports)"),
@@ -71,7 +52,6 @@ def main():
         success = run_script(script_name, description)
         results[description] = success
     
-    # Print summary
     print()
     print()
     print("=" * 80)
@@ -92,7 +72,6 @@ def main():
     print(f"Finished at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 80)
     
-    # Print output directory info
     project_root = Path(__file__).parent.parent.parent
     processed_dir = project_root / "data/processed"
     
@@ -115,7 +94,6 @@ def main():
     print("=" * 80)
     
     return 0 if successful_scripts == total_scripts else 1
-
 
 if __name__ == "__main__":
     sys.exit(main())
